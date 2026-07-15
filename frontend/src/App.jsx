@@ -1,7 +1,9 @@
 import React from 'react';
-import Navbar from './components/Navbar/Navbar';
+import { Routes, Route, useNavigate } from 'react-router-dom';
+import Navbar from './components/navbar/navbar';
 import Footer from './components/Footer/Footer';
 import Button from './components/UI/Button';
+import DoctorsList from './pages/DoctorsList';
 
 function App() {
   // Key metrics to make the page look like a real, functional healthcare system
@@ -28,7 +30,8 @@ function App() {
       description: "Schedule consultations with leading medical professionals and clinical specialists near you.",
       tag: "Consultation",
       actionText: "Book Appointment",
-      variant: "secondary"
+      variant: "secondary",
+      path: "/doctors"
     },
     {
       icon: "🚨",
@@ -46,6 +49,24 @@ function App() {
       <Navbar />
 
       <main className="flex-grow">
+      <Routes>
+        <Route path="/" element={<Home stats={stats} coreModules={coreModules} />} />
+        <Route path="/doctors" element={<DoctorsList />} />
+      </Routes>
+      </main>
+
+      {/* Structural Footer */}
+      <Footer />
+    </div>
+  );
+}
+
+// Homepage content, extracted so it can live at the "/" route
+function Home({ stats, coreModules }) {
+  const navigate = useNavigate();
+
+  return (
+    <>
         {/* 1. Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-b from-blue-50/50 via-white to-lightBg pt-16 pb-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 animate-fade-in">
@@ -121,7 +142,11 @@ function App() {
                 <Button 
                   variant={module.variant} 
                   className="w-full text-center mt-4"
-                  onClick={() => alert(`Navigating to ${module.title}...`)}
+                  onClick={() =>
+                    module.path
+                      ? navigate(module.path)
+                      : alert(`Navigating to ${module.title}...`)
+                  }
                 >
                   {module.actionText}
                 </Button>
@@ -166,11 +191,7 @@ function App() {
             </div>
           </div>
         </section>
-      </main>
-
-      {/* Structural Footer */}
-      <Footer />
-    </div>
+    </>
   );
 }
 
