@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+const hospitalRoutes = require('./routes/hospitalRoutes');
 
 dotenv.config();
 
@@ -37,6 +38,8 @@ app.get("/api/health", (req, res) => {
 // ── Feature routes ──────────────────────────────────────────────────────────
 const labRoutes = require("./routes/labRoutes");
 app.use("/api/lab-tests", labRoutes);
+
+app.use('/api/hospitals', hospitalRoutes);
 
 // ── Start listening ─────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
