@@ -1,66 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from '../components/UI/Card';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
 
-// Dummy data for now — will be replaced with a GET /api/doctors call
-// once the backend controller + MongoDB connection are ready (Day 4).
-const dummyDoctors = [
-  {
-    id: 1,
-    name: 'Dr. Ayesha Khan',
-    specialization: 'Cardiologist',
-    qualification: 'MBBS, FCPS (Cardiology)',
-    experience: 8,
-    rating: 4.8,
-    profileImage: 'https://randomuser.me/api/portraits/women/68.jpg',
-  },
-  {
-    id: 2,
-    name: 'Dr. Bilal Ahmed',
-    specialization: 'Dermatologist',
-    qualification: 'MBBS, MD (Dermatology)',
-    experience: 5,
-    rating: 4.6,
-    profileImage: 'https://randomuser.me/api/portraits/men/45.jpg',
-  },
-  {
-    id: 3,
-    name: 'Dr. Sana Malik',
-    specialization: 'Pediatrician',
-    qualification: 'MBBS, FCPS (Pediatrics)',
-    experience: 10,
-    rating: 4.9,
-    profileImage: 'https://randomuser.me/api/portraits/women/22.jpg',
-  },
-  {
-    id: 4,
-    name: 'Dr. Usman Tariq',
-    specialization: 'Orthopedic Surgeon',
-    qualification: 'MBBS, MS (Orthopedics)',
-    experience: 12,
-    rating: 4.7,
-    profileImage: 'https://randomuser.me/api/portraits/men/32.jpg',
-  },
-  {
-    id: 5,
-    name: 'Dr. Hina Raza',
-    specialization: 'Cardiologist',
-    qualification: 'MBBS, FCPS (Cardiology)',
-    experience: 6,
-    rating: 4.5,
-    profileImage: 'https://randomuser.me/api/portraits/women/50.jpg',
-  },
-  {
-    id: 6,
-    name: 'Dr. Omar Farooq',
-    specialization: 'Neurologist',
-    qualification: 'MBBS, FCPS (Neurology)',
-    experience: 9,
-    rating: 4.8,
-    profileImage: 'https://randomuser.me/api/portraits/men/60.jpg',
-  },
-];
+// Backend base URL — matches the Express server started with `node server.js`.
+// TODO: move this to an environment variable (VITE_API_URL) before deployment.
+const API_BASE_URL = 'http://localhost:5000/api';
 
 const specializations = [
   'All',
@@ -72,18 +17,46 @@ const specializations = [
 ];
 
 const DoctorsList = () => {
+  const [doctors, setDoctors] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSpecialization, setSelectedSpecialization] = useState('All');
 
-  const filteredDoctors = dummyDoctors.filter((doctor) => {
-    const matchesSearch = doctor.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    const matchesSpecialization =
-      selectedSpecialization === 'All' ||
-      doctor.specialization === selectedSpecialization;
-    return matchesSearch && matchesSpecialization;
-  });
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const params = new URLSearchParams();
+        if (searchTerm) params.append('search', searchTerm);
+        if (selectedSpecialization && selectedSpecialization !== 'All') {
+          params.append('specialization', selectedSpecialization);
+        }
+
+        const response = await fetch(`${API_BASE_URL}/doctors?${params.toString()}`);
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch doctors');
+        }
+
+        const result = await response.json();
+        setDoctors(result.data || []);
+      } catch (err) {
+        setError(
+          'Could not load doctors. Make sure the backend server is running on port 5000.'
+        );
+        setDoctors([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Small debounce so we don't fire a request on every keystroke
+    const timeoutId = setTimeout(fetchDoctors, 400);
+    return () => clearTimeout(timeoutId);
+  }, [searchTerm, selectedSpecialization]);
 
   return (
     <div className="bg-slate-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
@@ -128,45 +101,61 @@ const DoctorsList = () => {
           </div>
         </div>
 
-        {/* Doctors grid */}
-        {filteredDoctors.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredDoctors.map((doctor) => (
-              <Card key={doctor.id} className="flex flex-col items-center text-center">
-                <img
-                  src={doctor.profileImage}
-                  alt={doctor.name}
-                  className="w-24 h-24 rounded-full object-cover border-4 border-blue-50 mb-4"
-                />
-                <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-50 text-slate-600 mb-3">
-                  {doctor.specialization}
-                </span>
-                <h3 className="text-lg font-bold text-dark">{doctor.name}</h3>
-                <p className="text-sm text-slate-500 mt-1">{doctor.qualification}</p>
-
-                <div className="flex items-center justify-center gap-4 mt-4 text-sm text-slate-600">
-                  <span className="flex items-center gap-1">
-                    ⭐ <span className="font-semibold">{doctor.rating}</span>
-                  </span>
-                  <span className="flex items-center gap-1">
-                    🩺 <span className="font-semibold">{doctor.experience} yrs</span>
-                  </span>
-                </div>
-
-                <Button
-                  variant="primary"
-                  className="w-full mt-6"
-                  onClick={() => alert(`Navigating to ${doctor.name}'s profile...`)}
-                >
-                  View Profile
-                </Button>
-              </Card>
-            ))}
-          </div>
-        ) : (
+        {/* Loading state */}
+        {loading && (
           <div className="text-center py-20 text-slate-400 font-medium">
-            No doctors found matching your search.
+            Loading doctors...
           </div>
+        )}
+
+        {/* Error state */}
+        {!loading && error && (
+          <div className="text-center py-20 text-red-500 font-medium">
+            {error}
+          </div>
+        )}
+
+        {/* Doctors grid */}
+        {!loading && !error && (
+          doctors.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {doctors.map((doctor) => (
+                <Card key={doctor._id} className="flex flex-col items-center text-center">
+                  <img
+                    src={doctor.profileImage}
+                    alt={doctor.name}
+                    className="w-24 h-24 rounded-full object-cover border-4 border-blue-50 mb-4"
+                  />
+                  <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-50 text-slate-600 mb-3">
+                    {doctor.specialization}
+                  </span>
+                  <h3 className="text-lg font-bold text-dark">{doctor.name}</h3>
+                  <p className="text-sm text-slate-500 mt-1">{doctor.qualification}</p>
+
+                  <div className="flex items-center justify-center gap-4 mt-4 text-sm text-slate-600">
+                    <span className="flex items-center gap-1">
+                      ⭐ <span className="font-semibold">{doctor.rating}</span>
+                    </span>
+                    <span className="flex items-center gap-1">
+                      🩺 <span className="font-semibold">{doctor.experience} yrs</span>
+                    </span>
+                  </div>
+
+                  <Button
+                    variant="primary"
+                    className="w-full mt-6"
+                    onClick={() => alert(`Navigating to ${doctor.name}'s profile...`)}
+                  >
+                    View Profile
+                  </Button>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20 text-slate-400 font-medium">
+              No doctors found matching your search.
+            </div>
+          )
         )}
       </div>
     </div>
