@@ -7,6 +7,7 @@ import DoctorsList from './pages/DoctorsList';
 import LabTests from './pages/LabTests';
 import Hospitals from './pages/Hospitals';
 import Chatbot from './components/Chatbot';
+import DoctorDetails from './pages/DoctorDetails';
 
 function App() {
   const stats = [
@@ -53,6 +54,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home stats={stats} coreModules={coreModules} />} />
           <Route path="/doctors" element={<DoctorsList />} />
+          <Route path="/doctors/:id" element={<DoctorDetails />} />
           <Route path="/lab-tests" element={<LabTests />} />
           <Route path="/hospitals" element={<Hospitals />} />
         </Routes>
