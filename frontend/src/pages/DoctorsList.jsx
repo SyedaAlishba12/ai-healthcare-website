@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Card from '../components/UI/Card';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
 
-// Backend base URL — matches the Express server started with `node server.js`.
-// TODO: move this to an environment variable (VITE_API_URL) before deployment.
 const API_BASE_URL = 'http://localhost:5000/api';
 
 const specializations = [
@@ -17,6 +16,7 @@ const specializations = [
 ];
 
 const DoctorsList = () => {
+  const navigate = useNavigate();
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -53,7 +53,6 @@ const DoctorsList = () => {
       }
     };
 
-    // Small debounce so we don't fire a request on every keystroke
     const timeoutId = setTimeout(fetchDoctors, 400);
     return () => clearTimeout(timeoutId);
   }, [searchTerm, selectedSpecialization]);
@@ -61,7 +60,6 @@ const DoctorsList = () => {
   return (
     <div className="bg-slate-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* Page heading */}
         <div className="text-center mb-10 animate-fade-in">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-dark tracking-tight">
             Find Your Doctor
@@ -72,7 +70,6 @@ const DoctorsList = () => {
           </p>
         </div>
 
-        {/* Search + Filter bar */}
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 mb-10 flex flex-col sm:flex-row gap-4 sm:items-end">
           <div className="flex-1">
             <Input
@@ -101,26 +98,28 @@ const DoctorsList = () => {
           </div>
         </div>
 
-        {/* Loading state */}
         {loading && (
           <div className="text-center py-20 text-slate-400 font-medium">
             Loading doctors...
           </div>
         )}
 
-        {/* Error state */}
         {!loading && error && (
           <div className="text-center py-20 text-red-500 font-medium">
             {error}
           </div>
         )}
 
-        {/* Doctors grid */}
         {!loading && !error && (
           doctors.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {doctors.map((doctor) => (
-                <Card key={doctor._id} className="flex flex-col items-center text-center">
+              {doctors.map((doctor, index) => (
+                <div
+                  key={doctor._id}
+                  className="animate-fade-in"
+                  style={{ animationDelay: `${index * 60}ms`, animationFillMode: 'backwards' }}
+                >
+                <Card className="flex flex-col items-center text-center">
                   <img
                     src={doctor.profileImage}
                     alt={doctor.name}
@@ -144,11 +143,12 @@ const DoctorsList = () => {
                   <Button
                     variant="primary"
                     className="w-full mt-6"
-                    onClick={() => alert(`Navigating to ${doctor.name}'s profile...`)}
+                    onClick={() => navigate(`/doctors/${doctor._id}`)}
                   >
                     View Profile
                   </Button>
                 </Card>
+                </div>
               ))}
             </div>
           ) : (

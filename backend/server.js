@@ -1,17 +1,16 @@
-const dns = require("dns");
+import dns from "dns";
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const mongoose = require("mongoose");
-const doctorRoutes = require("./routes/doctorRoutes");
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import doctorRoutes from "./routes/doctorRoutes.js";
 
 dotenv.config();
 
 const app = express();
 
-// Middleware
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:5173",
@@ -20,7 +19,6 @@ app.use(
 
 app.use(express.json());
 
-// Test route
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
@@ -28,7 +26,6 @@ app.get("/", (req, res) => {
   });
 });
 
-// API health-check route
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     success: true,
@@ -36,12 +33,10 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Doctor routes
 app.use("/api/doctors", doctorRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-// Connect to MongoDB, then start the server
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {

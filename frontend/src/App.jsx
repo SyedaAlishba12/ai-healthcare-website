@@ -4,6 +4,7 @@ import Navbar from './components/navbar/navbar';
 import Footer from './components/Footer/Footer';
 import Button from './components/UI/Button';
 import DoctorsList from './pages/DoctorsList';
+import DoctorDetails from './pages/DoctorDetails';
 
 function App() {
   // Key metrics to make the page look like a real, functional healthcare system
@@ -52,6 +53,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home stats={stats} coreModules={coreModules} />} />
         <Route path="/doctors" element={<DoctorsList />} />
+        <Route path="/doctors/:id" element={<DoctorDetails />} />
       </Routes>
       </main>
 

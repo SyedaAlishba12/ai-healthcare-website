@@ -1,8 +1,6 @@
-const Doctor = require("../models/Doctor");
+import Doctor from "../models/Doctor.js";
 
-// @desc    Get all doctors (supports ?specialization= and ?search= query params)
-// @route   GET /api/doctors
-const getAllDoctors = async (req, res) => {
+export const getAllDoctors = async (req, res) => {
   try {
     const { specialization, search } = req.query;
     const filter = {};
@@ -31,9 +29,7 @@ const getAllDoctors = async (req, res) => {
   }
 };
 
-// @desc    Get a single doctor by ID
-// @route   GET /api/doctors/:id
-const getDoctorById = async (req, res) => {
+export const getDoctorById = async (req, res) => {
   try {
     const doctor = await Doctor.findById(req.params.id);
 
@@ -57,9 +53,7 @@ const getDoctorById = async (req, res) => {
   }
 };
 
-// @desc    Create a doctor (used for seeding/testing — remove or protect before production)
-// @route   POST /api/doctors
-const createDoctor = async (req, res) => {
+export const createDoctor = async (req, res) => {
   try {
     const doctor = await Doctor.create(req.body);
 
@@ -74,10 +68,4 @@ const createDoctor = async (req, res) => {
       error: error.message,
     });
   }
-};
-
-module.exports = {
-  getAllDoctors,
-  getDoctorById,
-  createDoctor,
 };
