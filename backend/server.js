@@ -1,10 +1,16 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import dns from "dns";
+
 import connectDB from "./config/db.js";
+
 import authRoutes from "./routes/authRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
 import emergencyRoutes from "./routes/emergencyRoutes.js";
+import doctorRoutes from "./routes/doctorRoutes.js";
+
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 dotenv.config();
 
@@ -14,7 +20,9 @@ connectDB();
 const app = express();
 
 /*
- Middleware
+|--------------------------------------------------------------------------
+| Middleware
+|--------------------------------------------------------------------------
 */
 
 app.use(
@@ -28,7 +36,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 /*
- Health Routes
+|--------------------------------------------------------------------------
+| Health Routes
+|--------------------------------------------------------------------------
 */
 
 app.get("/", (req, res) => {
@@ -46,15 +56,22 @@ app.get("/api/health", (req, res) => {
 });
 
 /*
- API Routes
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
 */
 
 app.use("/api/auth", authRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/emergency", emergencyRoutes);
 
+// Teammate's routes
+app.use("/api/doctors", doctorRoutes);
+
 /*
- 404 Handler
+|--------------------------------------------------------------------------
+| 404 Handler
+|--------------------------------------------------------------------------
 */
 
 app.use((req, res) => {
@@ -65,11 +82,13 @@ app.use((req, res) => {
 });
 
 /*
- Start Server
+|--------------------------------------------------------------------------
+| Start Server
+|--------------------------------------------------------------------------
 */
 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Healthcare server is running on http://localhost:${PORT}`);
 });
