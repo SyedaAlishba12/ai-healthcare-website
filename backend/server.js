@@ -1,9 +1,13 @@
+const dns = require("dns");
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const hospitalRoutes = require('./routes/hospitalRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const doctorRoutes = require("./routes/doctorRoutes");
 
 dotenv.config();
 
@@ -36,17 +40,13 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// ── Feature routes ──────────────────────────────────────────────────────────
 const labRoutes = require("./routes/labRoutes");
 app.use("/api/lab-tests", labRoutes);
-
 app.use('/api/hospitals', hospitalRoutes);
-
 app.use('/api/chat', chatRoutes);
+app.use("/api/doctors", doctorRoutes);
 
-// ── Start listening ─────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => {
   console.log(`🚀  Healthcare server is running on http://localhost:${PORT}`);
 });
