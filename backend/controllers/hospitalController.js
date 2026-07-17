@@ -68,8 +68,8 @@ const getNearbyHospitalsHandler = async (req, res) => {
     const message = isTimeout
       ? 'The map service timed out. Please try again in a moment.'
       : isNetworkErr
-      ? 'Unable to reach the map service. Check your internet connection.'
-      : 'Failed to fetch nearby hospitals. Please try again.';
+        ? 'Unable to reach the map service. Check your internet connection.'
+        : 'Failed to fetch nearby hospitals. Please try again.';
 
     return res.status(502).json({
       success: false,
