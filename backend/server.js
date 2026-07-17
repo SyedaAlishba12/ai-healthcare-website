@@ -1,19 +1,32 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import connectDB from './config/db.js'; 
+import medicineRoutes from './routes/medicineRoutes.js';
+import cartRoutes from './routes/cartRoutes.js';
 
 dotenv.config();
 
+// Connect to Cloud Database
+connectDB(); 
+
 const app = express();
 
-// Middleware
+// ==========================================
+// 1. GLOBAL MIDDLEWARES 
+// ==========================================
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:5173",
   })
 );
+app.use(express.json()); 
 
-app.use(express.json());
+// ==========================================
+// 2. API ROUTES
+// ==========================================
+app.use('/api/medicines', medicineRoutes); 
+app.use('/api/cart', cartRoutes);
 
 // Test route
 app.get("/", (req, res) => {
