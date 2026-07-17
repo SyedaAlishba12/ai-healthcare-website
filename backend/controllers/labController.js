@@ -49,7 +49,7 @@ const bookLabTest = async (req, res) => {
       return res.status(400).json({
         success: false,
         message:
-          'All fields are required: patientName, email, phone, testId, preferredDate.',
+          'All fields are required: patientName, email, phone, preferredDate.',
       });
     }
 

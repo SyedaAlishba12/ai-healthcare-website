@@ -86,6 +86,7 @@ const Hospitals = () => {
   const [loading, setLoading] = useState(false);
   const [fetchError, setFetchError] = useState('');
   const [radiusKm, setRadiusKm] = useState(5);           // user-adjustable (km)
+  const [showSlowMessage, setShowSlowMessage] = useState(false);
 
   // UI
   const [activeHospital, setActiveHospital] = useState(null);
@@ -128,6 +129,17 @@ const Hospitals = () => {
   useEffect(() => {
     loadHospitals();
   }, [loadHospitals]);
+
+  // ── Show "still searching" hint after 5 s of continuous loading ──────────────
+  useEffect(() => {
+    if (!loading) {
+      setShowSlowMessage(false);
+      return;
+    }
+    setShowSlowMessage(false); // reset on every new load
+    const timer = setTimeout(() => setShowSlowMessage(true), 5000);
+    return () => clearTimeout(timer);
+  }, [loading]);
 
   // ── Manual city search ──────────────────────────────────────────────────────
   const handleCitySearch = async (e) => {
@@ -314,6 +326,16 @@ const Hospitals = () => {
                   </span>
                 )}
               </div>
+
+              {/* Slow-load reassurance — appears after 5 s of continuous loading */}
+              {loading && showSlowMessage && (
+                <p
+                  id="slow-load-message"
+                  className="text-xs text-slate-500 italic mb-2 animate-pulse bg-slate-50 p-2 rounded-lg border border-slate-100"
+                >
+                  Still searching — this can take up to a minute if our map service is slow.
+                </p>
+              )}
 
               {/* Loading skeletons */}
               {loading &&

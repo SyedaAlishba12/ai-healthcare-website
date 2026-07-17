@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const hospitalRoutes = require('./routes/hospitalRoutes');
+const chatRoutes = require('./routes/chatRoutes');
 
 dotenv.config();
 
@@ -40,6 +41,8 @@ const labRoutes = require("./routes/labRoutes");
 app.use("/api/lab-tests", labRoutes);
 
 app.use('/api/hospitals', hospitalRoutes);
+
+app.use('/api/chat', chatRoutes);
 
 // ── Start listening ─────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;

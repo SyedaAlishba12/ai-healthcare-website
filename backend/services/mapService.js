@@ -19,7 +19,7 @@ function haversine(lat1, lng1, lat2, lng2) {
 }
 
 // ── Tiny HTTPS GET helper with timeout and headers ─────────────────────
-function httpsGet(url, timeoutMs = 15000, headers = {}) {
+function httpsGet(url, timeoutMs = 20000, headers = {}) {
   return new Promise((resolve, reject) => {
     const parsedUrl = new URL(url);
     const options = {
@@ -61,10 +61,44 @@ function httpsGet(url, timeoutMs = 15000, headers = {}) {
   });
 }
 
+// ── Retry wrapper ────────────────────────────────────────────────────────────
+/**
+ * Calls httpsGet up to `maxAttempts` times, waiting `delayMs` between each.
+ * Resolves with the first successful response; rejects with the last error.
+ */
+async function httpsGetWithRetry(url, timeoutMs = 10000, maxAttempts = 3, delayMs = 1000) {
+  let lastError;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await httpsGet(url, timeoutMs);
+    } catch (err) {
+      lastError = err;
+      const isLast = attempt === maxAttempts;
+      console.warn(
+        `[mapService] Overpass attempt ${attempt}/${maxAttempts} failed: ${err.message}` +
+        (isLast ? ' — no more retries.' : ` — retrying in ${delayMs}ms…`)
+      );
+      if (!isLast) {
+        await new Promise((r) => setTimeout(r, delayMs));
+      }
+    }
+  }
+  throw lastError;
+}
+
+// ─── Overpass endpoints ───────────────────────────────────────────────────────
+const OVERPASS_PRIMARY  = 'https://overpass-api.de/api/interpreter';
+const OVERPASS_FALLBACK = 'https://overpass.kumi.systems/api/interpreter';
+
 // ─── Main export ──────────────────────────────────────────────────────────────
 /**
  * Fetch hospitals near (lat, lng) within `radius` metres from Overpass API.
  * Returns an array sorted by ascending distance (km).
+ *
+ * Resilience strategy:
+ *   1. Try primary endpoint (overpass-api.de)  — up to 3 attempts, 1 s apart
+ *   2. If all primary attempts fail, try fallback (overpass.kumi.systems) — up to 3 attempts
+ *   3. Only throw to the caller if BOTH chains fail completely
  */
 async function getNearbyHospitals({ lat, lng, radius = 5000 }) {
   // Overpass QL — hospitals (nodes + ways + relations) within radius
@@ -79,9 +113,26 @@ async function getNearbyHospitals({ lat, lng, radius = 5000 }) {
   `.trim();
 
   const encoded = encodeURIComponent(query);
-  const url = `https://overpass-api.de/api/interpreter?data=${encoded}`;
 
-  const data = await httpsGet(url, 20000);
+  // ── Try primary, then fallback ────────────────────────────────────────────
+  let data;
+  try {
+    const primaryUrl = `${OVERPASS_PRIMARY}?data=${encoded}`;
+    data = await httpsGetWithRetry(primaryUrl, 10000, 3, 1000);
+    console.log('[mapService] Overpass primary succeeded.');
+  } catch (primaryErr) {
+    console.warn(`[mapService] Primary endpoint exhausted: ${primaryErr.message} — trying fallback…`);
+    try {
+      const fallbackUrl = `${OVERPASS_FALLBACK}?data=${encoded}`;
+      data = await httpsGetWithRetry(fallbackUrl, 10000, 3, 1000);
+      console.log('[mapService] Overpass fallback (kumi.systems) succeeded.');
+    } catch (fallbackErr) {
+      // Both chains failed — surface a clear error to the controller
+      throw new Error(
+        `All Overpass endpoints failed. Primary: ${primaryErr.message} | Fallback: ${fallbackErr.message}`
+      );
+    }
+  }
 
   if (!data.elements || !Array.isArray(data.elements)) {
     return [];
