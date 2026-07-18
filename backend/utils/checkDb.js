@@ -1,12 +1,8 @@
-// Quick diagnostic script — lists all databases and collections
-// visible to this connection, and counts documents in "doctors"
-// wherever it's found. Run with: node utils/checkDb.js
-
-const dns = require("dns");
+import dns from "dns";
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 dotenv.config();
 
 const check = async () => {

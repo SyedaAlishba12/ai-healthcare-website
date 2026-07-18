@@ -1,7 +1,9 @@
+import dns from "dns";
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import dns from "dns";
 
 import connectDB from "./config/db.js";
 
@@ -9,8 +11,6 @@ import authRoutes from "./routes/authRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
 import emergencyRoutes from "./routes/emergencyRoutes.js";
 import doctorRoutes from "./routes/doctorRoutes.js";
-
-dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 dotenv.config();
 
@@ -65,7 +65,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/emergency", emergencyRoutes);
 
-// Teammate's routes
+// Doctor Module
 app.use("/api/doctors", doctorRoutes);
 
 /*
