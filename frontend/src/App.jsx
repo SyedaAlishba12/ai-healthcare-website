@@ -4,6 +4,7 @@ import Navbar from './components/navbar/navbar';
 import Footer from './components/Footer/Footer';
 import Button from './components/UI/Button';
 import DoctorsList from './pages/DoctorsList';
+import Login from "./pages/Login";
 
 function App() {
   // Key metrics to make the page look like a real, functional healthcare system
@@ -51,6 +52,7 @@ function App() {
       <main className="flex-grow">
       <Routes>
         <Route path="/" element={<Home stats={stats} coreModules={coreModules} />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/doctors" element={<DoctorsList />} />
       </Routes>
       </main>
