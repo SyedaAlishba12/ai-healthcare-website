@@ -117,7 +117,7 @@ const DoctorDetails = () => {
             <Button
               variant="primary"
               className="mt-6 w-full sm:w-auto"
-              onClick={() => alert(`Booking flow for ${doctor.name} coming soon...`)}
+              onClick={() => navigate(`/book-appointment/${doctor._id}`)}
             >
               Book Appointment
             </Button>

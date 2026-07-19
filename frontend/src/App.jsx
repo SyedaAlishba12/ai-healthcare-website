@@ -5,6 +5,7 @@ import Footer from './components/Footer/Footer';
 import Button from './components/UI/Button';
 import DoctorsList from './pages/DoctorsList';
 import DoctorDetails from './pages/DoctorDetails';
+import BookAppointment from './pages/BookAppointment';
 
 function App() {
   // Key metrics to make the page look like a real, functional healthcare system
@@ -54,6 +55,7 @@ function App() {
         <Route path="/" element={<Home stats={stats} coreModules={coreModules} />} />
         <Route path="/doctors" element={<DoctorsList />} />
         <Route path="/doctors/:id" element={<DoctorDetails />} />
+        <Route path="/book-appointment/:id" element={<BookAppointment />} />
       </Routes>
       </main>
 

@@ -6,6 +6,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import doctorRoutes from "./routes/doctorRoutes.js";
+import appointmentRoutes from "./routes/appointmentRoutes.js";
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use("/api/doctors", doctorRoutes);
+app.use("/api/appointments", appointmentRoutes);
 
 const PORT = process.env.PORT || 5000;
 
