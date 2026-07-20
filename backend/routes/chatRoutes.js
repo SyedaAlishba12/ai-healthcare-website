@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { sendMessage, getHistory, clearHistory } = require('../controllers/chatController');
+import { sendMessage, getHistory, clearHistory } from '../controllers/chatController.js';
 
 // POST   /api/chat              — send a message, get AI response
 router.post('/', sendMessage);
@@ -11,4 +11,4 @@ router.get('/history/:sessionId', getHistory);
 // DELETE /api/chat/history/:sessionId — clear message history
 router.delete('/history/:sessionId', clearHistory);
 
-module.exports = router;
+export default router;

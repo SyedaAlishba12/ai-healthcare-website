@@ -1,5 +1,5 @@
-const ChatHistory = require('../models/ChatHistory');
-const { getAIResponse } = require('../services/aiService');
+import ChatHistory from '../models/ChatHistory.js';
+import { getAIResponse } from '../services/aiService.js';
 
 // ── POST /api/chat ─────────────────────────────────────────────────────────────
 const sendMessage = async (req, res) => {
@@ -123,4 +123,4 @@ const clearHistory = async (req, res) => {
   }
 };
 
-module.exports = { sendMessage, getHistory, clearHistory };
+export { sendMessage, getHistory, clearHistory };

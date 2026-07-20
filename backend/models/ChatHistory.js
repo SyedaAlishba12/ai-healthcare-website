@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const messageSchema = new mongoose.Schema({
   role: {
@@ -30,4 +30,4 @@ const chatHistorySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model('ChatHistory', chatHistorySchema);
+export default mongoose.model('ChatHistory', chatHistorySchema);

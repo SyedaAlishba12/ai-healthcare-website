@@ -4,7 +4,7 @@
  * Model: llama-3.3-70b-versatile (replace with current model if deprecated)
  */
 
-const https = require('https');
+import https from 'https';
 
 // ── Model ────────────────────────────────────────────────────────────────────
 const GROQ_MODEL = 'llama-3.3-70b-versatile';
@@ -191,4 +191,4 @@ async function getAIResponse(conversationHistory, newUserMessage) {
   }
 }
 
-module.exports = { getAIResponse, matchFAQFallback };
+export { getAIResponse, matchFAQFallback };

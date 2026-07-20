@@ -1,4 +1,4 @@
-const { getNearbyHospitals } = require('../services/mapService');
+import { getNearbyHospitals } from '../services/mapService.js';
 
 // GET /api/hospitals/nearby?lat=31.5&lng=74.3&radius=5000
 const getNearbyHospitalsHandler = async (req, res) => {
@@ -78,4 +78,4 @@ const getNearbyHospitalsHandler = async (req, res) => {
   }
 };
 
-module.exports = { getNearbyHospitalsHandler };
+export { getNearbyHospitalsHandler };

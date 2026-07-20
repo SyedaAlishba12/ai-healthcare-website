@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const labBookingSchema = new mongoose.Schema(
   {
@@ -38,4 +38,4 @@ const labBookingSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model('LabBooking', labBookingSchema);
+export default mongoose.model('LabBooking', labBookingSchema);

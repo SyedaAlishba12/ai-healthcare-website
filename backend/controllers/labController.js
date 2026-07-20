@@ -1,5 +1,5 @@
-const LabTest = require('../models/LabTest');
-const LabBooking = require('../models/LabBooking');
+import LabTest from '../models/LabTest.js';
+import LabBooking from '../models/LabBooking.js';
 
 // GET /api/lab-tests
 const getAllLabTests = async (req, res) => {
@@ -117,7 +117,7 @@ const bookLabTest = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   getAllLabTests,
   getLabTestById,
   bookLabTest,

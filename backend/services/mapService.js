@@ -4,7 +4,7 @@
  * then attaches haversine distance to each result.
  */
 
-const https = require('https');
+import https from 'https';
 
 // ─── Haversine distance (km) ─────────────────────────────────────────────────
 function haversine(lat1, lng1, lat2, lng2) {
@@ -189,4 +189,4 @@ async function getNearbyHospitals({ lat, lng, radius = 5000 }) {
   return unique;
 }
 
-module.exports = { getNearbyHospitals };
+export { getNearbyHospitals };

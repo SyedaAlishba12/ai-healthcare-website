@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const { getNearbyHospitalsHandler } = require('../controllers/hospitalController');
+import { getNearbyHospitalsHandler } from '../controllers/hospitalController.js';
 
 // GET /api/hospitals/nearby?lat=&lng=&radius=
 router.get('/nearby', getNearbyHospitalsHandler);
 
-module.exports = router;
+export default router;
