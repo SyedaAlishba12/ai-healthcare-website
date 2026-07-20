@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Nav links are based on the team's task division modules
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Doctors', path: '/doctors' },
     { name: 'Medicines', path: '/medicines' },
     { name: 'Lab Tests', path: '/lab-tests' },
+    { name: 'Hospitals', path: '/hospitals' },
+    { name: 'Blog', path: '/blog' },
     { name: 'Emergency', path: '/emergency', isEmergency: true }
   ];
 
@@ -29,9 +31,9 @@ const Navbar = () => {
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center space-x-6">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
-                href={link.path}
+                to={link.path}
                 className={`font-semibold px-3 py-2 rounded-lg transition-all duration-300 ${
                   link.isEmergency
                     ? 'bg-emergency text-white hover:bg-red-600 shadow-md hover:shadow-lg hover:scale-105'
@@ -39,12 +41,24 @@ const Navbar = () => {
                 }`}
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
+            
+            {/* Cart Icon Button */}
+            <Link to="/cart" className="relative flex items-center justify-center w-10 h-10 rounded-full bg-lightBg hover:bg-slate-200 transition-all duration-300">
+              <svg className="h-6 w-6 text-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </Link>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="flex items-center md:hidden">
+          {/* Mobile Menu Button & Cart */}
+          <div className="flex items-center md:hidden space-x-4">
+            <Link to="/cart" className="relative flex items-center justify-center w-10 h-10 rounded-full bg-lightBg">
+              <svg className="h-6 w-6 text-dark" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </Link>
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-dark hover:text-primary focus:outline-none"
@@ -65,9 +79,9 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 px-2 pt-2 pb-4 space-y-1 shadow-inner animate-fade-in">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.name}
-              href={link.path}
+              to={link.path}
               className={`block px-4 py-2.5 rounded-xl font-semibold transition-all duration-200 ${
                 link.isEmergency
                   ? 'bg-emergency text-white text-center mt-2'
@@ -75,7 +89,7 @@ const Navbar = () => {
               }`}
             >
               {link.name}
-            </a>
+            </Link>
           ))}
         </div>
       )}

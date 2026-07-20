@@ -10,7 +10,8 @@ import cors from 'cors';
 import connectDB from './config/db.js'; 
 import medicineRoutes from './routes/medicineRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
-
+import blogRoutes from "./routes/blogRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 dotenv.config();
 
 // Connect to Cloud Database
@@ -33,6 +34,8 @@ app.use(express.json());
 // ==========================================
 app.use('/api/medicines', medicineRoutes); 
 app.use('/api/cart', cartRoutes);
+app.use("/api/blogs", blogRoutes);
+app.use("/api/orders", orderRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({

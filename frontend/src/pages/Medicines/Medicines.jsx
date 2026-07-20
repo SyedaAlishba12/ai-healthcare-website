@@ -43,14 +43,10 @@ const Medicines = () => {
     fetchMedicinesFromDatabase();
   }, []);
 
-  // Direct Add to Cart Handler (This solves your exact issue)
-  const handleAddDirectToCart = (medicineProduct) => {
-    if (!medicineProduct) return;
+ const handleAddDirectToCart = async (medicineProduct) => {
+  if (!medicineProduct) return;
 
-    // Get current cart or initialize empty list
-    const existingCart = JSON.parse(localStorage.getItem('healthpulse_cart')) || [];
-    
-    // Safety check for Medicine ID (MongoDB uses _id)
+  try {
     const resolvedId = medicineProduct._id || medicineProduct.id;
 
     if (!resolvedId) {
@@ -58,37 +54,32 @@ const Medicines = () => {
       return;
     }
 
-    // Check if item already exists in cart
-    const existingItemIndex = existingCart.findIndex(item => (item._id === resolvedId || item.id === resolvedId));
+    const response = await fetch('http://localhost:5000/api/cart/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: 'guest_user_123',
+        medicineId: resolvedId,
+        quantity: 1,
+      }),
+    });
 
-    if (existingItemIndex > -1) {
-      // Update quantity of existing item
-      existingCart[existingItemIndex].quantity += 1;
-    } else {
-      // Create and append new item
-      const newItem = {
-        _id: resolvedId,
-        id: resolvedId,
-        name: medicineProduct.name || 'Unnamed Medicine',
-        category: medicineProduct.category || 'General',
-        price: Number(medicineProduct.price) || 0,
-        image: medicineProduct.image || 'https://via.placeholder.com/150',
-        quantity: 1, // Default quantity on direct catalog click is 1
-        manufacturer: medicineProduct.manufacturer || 'Prescribed Drug'
-      };
-      existingCart.push(newItem);
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || 'Could not add item to cart');
     }
 
-    // Save back to local storage
-    localStorage.setItem('healthpulse_cart', JSON.stringify(existingCart));
-    
-    // Dispatch custom event to instantly sync and update Navbar cart badges/counters
     window.dispatchEvent(new Event('cartUpdate'));
 
     alert(`${medicineProduct.name} successfully added to cart!`);
-    
-    // Redirect instantly to Cart page
     navigate('/cart');
+  } catch (error) {
+    console.error('Add to cart error:', error);
+    alert(error.message || 'Failed to add item to cart');
+  }
   };
 
   // Filter search and categories locally on client-side

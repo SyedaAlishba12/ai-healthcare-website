@@ -41,16 +41,44 @@ const MedicineDetails = () => {
     }
   }, [id]);
 
-  const handleAddToCart = (e) => {
-    // Prevent any page reload or default form submits
-    if (e) e.preventDefault();
-    
-    console.log("AddToCart Event Triggered Successfully from Details Page!");
+  const handleAddToCart = async (e) => {
+  if (e) e.preventDefault();
 
-    if (!medicine) {
-      alert("Error: Product data is still loading. Please try again.");
-      return;
+  if (!medicine) {
+    alert("Error: Product data is still loading. Please try again.");
+    return;
+  }
+
+  try {
+    const resolvedId = medicine._id || medicine.id || id;
+
+    const response = await fetch('http://localhost:5000/api/cart/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: 'guest_user_123',
+        medicineId: resolvedId,
+        quantity,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || 'Could not add item to cart');
     }
+
+    window.dispatchEvent(new Event('cartUpdate'));
+
+    alert(`${quantity}x ${medicine.name || 'item'} successfully added to cart!`);
+    navigate('/cart');
+  } catch (error) {
+    console.error('Add to cart error:', error);
+    alert(error.message || 'Failed to add item to cart');
+  }
+
 
     // Get current cart or initialize empty list
     const existingCart = JSON.parse(localStorage.getItem('healthpulse_cart')) || [];
