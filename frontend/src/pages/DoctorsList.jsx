@@ -4,6 +4,8 @@ import Card from '../components/UI/Card';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
 
+// Backend base URL — matches the Express server started with `node server.js`.
+// TODO: move this to an environment variable (VITE_API_URL) before deployment.
 const API_BASE_URL = 'http://localhost:5000/api';
 
 const specializations = [
@@ -53,6 +55,7 @@ const DoctorsList = () => {
       }
     };
 
+    // Small debounce so we don't fire a request on every keystroke
     const timeoutId = setTimeout(fetchDoctors, 400);
     return () => clearTimeout(timeoutId);
   }, [searchTerm, selectedSpecialization]);
@@ -60,6 +63,7 @@ const DoctorsList = () => {
   return (
     <div className="bg-slate-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
+        {/* Page heading */}
         <div className="text-center mb-10 animate-fade-in">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-dark tracking-tight">
             Find Your Doctor
@@ -70,6 +74,7 @@ const DoctorsList = () => {
           </p>
         </div>
 
+        {/* Search + Filter bar */}
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 mb-10 flex flex-col sm:flex-row gap-4 sm:items-end">
           <div className="flex-1">
             <Input
@@ -98,18 +103,21 @@ const DoctorsList = () => {
           </div>
         </div>
 
+        {/* Loading state */}
         {loading && (
           <div className="text-center py-20 text-slate-400 font-medium">
             Loading doctors...
           </div>
         )}
 
+        {/* Error state */}
         {!loading && error && (
           <div className="text-center py-20 text-red-500 font-medium">
             {error}
           </div>
         )}
 
+        {/* Doctors grid */}
         {!loading && !error && (
           doctors.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -128,8 +136,8 @@ const DoctorsList = () => {
                   <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-50 text-slate-600 mb-3">
                     {doctor.specialization}
                   </span>
-                  <h3 className="text-lg font-bold text-dark">{doctor.name}</h3>
-                  <p className="text-sm text-slate-500 mt-1">{doctor.qualification}</p>
+                  <h3 className="text-lg font-bold text-dark truncate max-w-full px-2">{doctor.name}</h3>
+                  <p className="text-sm text-slate-500 mt-1 truncate max-w-full px-2">{doctor.qualification}</p>
 
                   <div className="flex items-center justify-center gap-4 mt-4 text-sm text-slate-600">
                     <span className="flex items-center gap-1">
