@@ -9,7 +9,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   const navLinks = [
-    { name: "Home", path: "/" },
+    { name: "Home", path: "/home" },
     { name: "Doctors", path: "/doctors" },
     { name: "Medicines", path: "/medicines" },
     { name: "Lab Tests", path: "/lab-tests" },

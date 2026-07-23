@@ -34,7 +34,7 @@ const Login = () => {
       const response = await login(formData);
 
       if (response.success) {
-        navigate("/");
+        navigate("/home");
       }
     } catch (err) {
       setError(

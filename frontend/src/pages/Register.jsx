@@ -60,7 +60,7 @@ const Register = () => {
       });
 
       if (response.success) {
-        navigate("/");
+        navigate("/home");
       }
     } catch (err) {
       setError(

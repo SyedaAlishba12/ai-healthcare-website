@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
@@ -35,56 +35,171 @@ import BlogDetails from "./pages/Blog/BlogDetails";
 import Emergency from "./pages/Emergency";
 import Contact from "./pages/Contact";
 
+// Route Guards
+import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
+
 function App() {
+  const location = useLocation();
+
+  const hideLayout = location.pathname === "/";
+
   return (
     <div className="flex min-h-screen flex-col bg-lightBg selection:bg-primary/20">
       <ScrollToTop />
 
-      <Navbar />
+      {!hideLayout && <Navbar />}
 
       <main className="flex-grow">
         <Routes>
+          {/* Splash */}
+          <Route path="/" element={<Splash />} />
 
-          {/* Home */}
-          <Route path="/" element={<Home />} />
+          {/* Protected Home */}
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Authentication */}
-          <Route path="/splash" element={<Splash />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
+
+          <Route
+            path="/forgot-password"
+            element={
+              <PublicRoute>
+                <ForgotPassword />
+              </PublicRoute>
+            }
+          />
 
           {/* Doctors */}
-          <Route path="/doctors" element={<DoctorsList />} />
-          <Route path="/doctors/:id" element={<DoctorDetails />} />
+          <Route
+            path="/doctors"
+            element={
+              <ProtectedRoute>
+                <DoctorsList />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/doctors/:id"
+            element={
+              <ProtectedRoute>
+                <DoctorDetails />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/book-appointment/:id"
-            element={<BookAppointment />}
+            element={
+              <ProtectedRoute>
+                <BookAppointment />
+              </ProtectedRoute>
+            }
           />
 
           {/* Medicines */}
-          <Route path="/medicines" element={<Medicines />} />
+          <Route
+            path="/medicines"
+            element={
+              <ProtectedRoute>
+                <Medicines />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/medicines/:id"
-            element={<MedicineDetails />}
+            element={
+              <ProtectedRoute>
+                <MedicineDetails />
+              </ProtectedRoute>
+            }
           />
 
           {/* Cart */}
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
+          <Route
+            path="/cart"
+            element={
+              <ProtectedRoute>
+                <Cart />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/checkout"
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Blog */}
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:id" element={<BlogDetails />} />
+          <Route
+            path="/blog"
+            element={
+              <ProtectedRoute>
+                <Blog />
+              </ProtectedRoute>
+            }
+          />
 
-          {/* Your Modules */}
-          <Route path="/emergency" element={<Emergency />} />
-          <Route path="/contact" element={<Contact />} />
+          <Route
+            path="/blog/:id"
+            element={
+              <ProtectedRoute>
+                <BlogDetails />
+              </ProtectedRoute>
+            }
+          />
 
+          {/* Contact & Emergency */}
+          <Route
+            path="/emergency"
+            element={
+              <ProtectedRoute>
+                <Emergency />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/contact"
+            element={
+              <ProtectedRoute>
+                <Contact />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
 
-      <Footer />
+      {!hideLayout && <Footer />}
     </div>
   );
 }
