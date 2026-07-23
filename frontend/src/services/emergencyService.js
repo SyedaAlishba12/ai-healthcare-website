@@ -6,6 +6,6 @@ export const getEmergencyContacts = async () => {
 };
 
 export const getEmergencyByType = async (type) => {
-  const response = await api.get(`/emergency/${type}`);
+  const response = await api.get(`/emergency?type=${type}`);
   return response.data;
 };

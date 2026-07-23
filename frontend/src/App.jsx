@@ -8,6 +8,11 @@ import Button from './components/UI/Button';
 import DoctorsList from './pages/DoctorsList';
 import DoctorDetails from './pages/DoctorDetails';
 import Login from './pages/Login';
+import Emergency from "./pages/Emergency";
+import Register from "./pages/Register";
+import Contact from "./pages/Contact";
+import Splash from "./pages/Splash";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   // Key metrics to make the page look like a real, functional healthcare system
@@ -40,10 +45,22 @@ function App() {
     {
       icon: "🚨",
       title: "24/7 Emergency Hub",
-      description: "Get instant access to critical emergency contacts, hospital dispatch, and real-time medical aid.",
+      description:
+        "Get instant access to critical emergency contacts, hospital dispatch, and real-time medical aid.",
       tag: "Urgent Care",
       actionText: "Emergency Contacts",
-      variant: "danger"
+      variant: "danger",
+      path: "/emergency",
+    },
+    {
+      icon: "📩",
+      title: "Contact Us",
+      description:
+        "Reach our healthcare support team for any questions or assistance.",
+      tag: "Support",
+      actionText: "Contact Us",
+      variant: "primary",
+      path: "/contact",
     }
   ];
 
@@ -55,15 +72,29 @@ function App() {
       <main className="flex-grow">
         <Routes>
           <Route
+            path="/splash"
+            element={<Splash />}
+          />
+
+          <Route
             path="/"
             element={<Home stats={stats} coreModules={coreModules} />}
           />
 
           <Route path="/login" element={<Login />} />
 
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+
+          <Route path="/register" element={<Register />} />
+
           <Route path="/doctors" element={<DoctorsList />} />
 
           <Route path="/doctors/:id" element={<DoctorDetails />} />
+
+          <Route path="/emergency" element={<Emergency />} />
+
+          <Route path="/contact" element={<Contact />} />
+
         </Routes>
       </main>
 
@@ -107,7 +138,7 @@ function Home({ stats, coreModules }) {
 
             <Button
               variant="outline"
-              onClick={() => alert("Opening Emergency Support...")}
+              onClick={() => navigate("/emergency")}
             >
               View Emergency Hotlines
             </Button>

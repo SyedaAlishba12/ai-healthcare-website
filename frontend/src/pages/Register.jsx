@@ -1,21 +1,25 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import Button from "../components/UI/Button";
 import Input from "../components/UI/Input";
-import { useAuth } from "../context/AuthContext";
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { register } = useAuth();
 
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
+    phone: "",
     password: "",
+    confirmPassword: "",
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -28,17 +32,40 @@ const Login = () => {
     e.preventDefault();
 
     setError("");
+
+    if (
+      !formData.name ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.password ||
+      !formData.confirmPassword
+    ) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const response = await login(formData);
+      const response = await register({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password,
+      });
 
       if (response.success) {
         navigate("/");
       }
     } catch (err) {
       setError(
-        err.response?.data?.message || "Login failed."
+        err.response?.data?.message ||
+        "Registration failed."
       );
     } finally {
       setLoading(false);
@@ -50,11 +77,11 @@ const Login = () => {
       <div className="bg-white shadow-lg rounded-3xl w-full max-w-md p-8">
 
         <h1 className="text-3xl font-bold text-center text-dark">
-          Welcome Back
+          Create Account
         </h1>
 
         <p className="text-center text-slate-500 mt-2 mb-8">
-          Login to your healthcare account.
+          Join HealthPulse and manage your healthcare digitally.
         </p>
 
         {error && (
@@ -66,11 +93,29 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="space-y-5">
 
           <Input
+            label="Full Name"
+            name="name"
+            type="text"
+            placeholder="Enter your full name"
+            value={formData.name}
+            onChange={handleChange}
+          />
+
+          <Input
             label="Email"
             name="email"
             type="email"
             placeholder="example@gmail.com"
             value={formData.email}
+            onChange={handleChange}
+          />
+
+          <Input
+            label="Phone Number"
+            name="phone"
+            type="text"
+            placeholder="03XXXXXXXXX"
+            value={formData.phone}
             onChange={handleChange}
           />
 
@@ -95,6 +140,26 @@ const Login = () => {
 
           </div>
 
+          <div className="relative">
+
+            <Input
+              label="Confirm Password"
+              name="confirmPassword"
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+            />
+
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-4 top-[42px] text-sm font-medium text-primary hover:text-primary-dark"
+            >
+              {showConfirmPassword ? "Hide" : "Show"}
+            </button>
+
+          </div>
           <Button
             type="submit"
             variant="primary"
@@ -105,26 +170,23 @@ const Login = () => {
                 <span className="inline-block w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
               )}
 
-              {loading ? "Logging In..." : "Login"}
+              {loading ? "Creating Account..." : "Register"}
             </>
           </Button>
 
         </form>
 
-        <div className="flex justify-between mt-6 text-sm">
+        <div className="text-center mt-6 text-sm">
+
+          <span className="text-slate-600">
+            Already have an account?{" "}
+          </span>
 
           <Link
-            to="/forgot-password"
-            className="text-primary hover:underline"
+            to="/login"
+            className="text-primary font-semibold hover:underline"
           >
-            Forgot Password?
-          </Link>
-
-          <Link
-            to="/register"
-            className="text-primary hover:underline"
-          >
-            Create Account
+            Login
           </Link>
 
         </div>
@@ -134,4 +196,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

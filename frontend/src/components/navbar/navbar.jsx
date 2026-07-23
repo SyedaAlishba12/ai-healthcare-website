@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
-  // Nav links are based on the team's task division modules
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Doctors', path: '/doctors' },
     { name: 'Medicines', path: '/medicines' },
     { name: 'Lab Tests', path: '/lab-tests' },
-    { name: 'Emergency', path: '/emergency', isEmergency: true }
+    { name: "Contact", path: "/contact" },
+    { name: 'Emergency', path: '/emergency', isEmergency: true },
   ];
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50 transition-all duration-300">
@@ -26,12 +35,12 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* Desktop Nav Links */}
+          {/* Desktop Nav Links & Auth Buttons */}
           <div className="hidden md:flex items-center space-x-6">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
-                href={link.path}
+                to={link.path}
                 className={`font-semibold px-3 py-2 rounded-lg transition-all duration-300 ${
                   link.isEmergency
                     ? 'bg-emergency text-white hover:bg-red-600 shadow-md hover:shadow-lg hover:scale-105'
@@ -39,8 +48,25 @@ const Navbar = () => {
                 }`}
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
+
+            {/* Auth buttons */}
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition"
+              >
+                Login
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -65,9 +91,9 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 px-2 pt-2 pb-4 space-y-1 shadow-inner animate-fade-in">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.name}
-              href={link.path}
+              to={link.path}
               className={`block px-4 py-2.5 rounded-xl font-semibold transition-all duration-200 ${
                 link.isEmergency
                   ? 'bg-emergency text-white text-center mt-2'
@@ -75,8 +101,25 @@ const Navbar = () => {
               }`}
             >
               {link.name}
-            </a>
+            </Link>
           ))}
+
+          {/* Mobile auth buttons */}
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className="w-full mt-2 px-4 py-2.5 bg-red-500 text-white rounded-xl font-semibold hover:bg-red-600 transition"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="block w-full mt-2 px-4 py-2.5 bg-primary text-white rounded-xl font-semibold text-center hover:bg-primary-dark transition"
+            >
+              Login
+            </Link>
+          )}
         </div>
       )}
     </nav>

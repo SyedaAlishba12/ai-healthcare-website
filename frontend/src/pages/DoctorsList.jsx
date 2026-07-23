@@ -1,93 +1,111 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Card from '../components/UI/Card';
-import Button from '../components/UI/Button';
-import Input from '../components/UI/Input';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const API_BASE_URL = 'http://localhost:5000/api';
+import Card from "../components/UI/Card";
+import Button from "../components/UI/Button";
+import Input from "../components/UI/Input";
+
+import { getDoctors } from "../services/doctorService";
 
 const specializations = [
-  'All',
-  'Cardiologist',
-  'Dermatologist',
-  'Pediatrician',
-  'Orthopedic Surgeon',
-  'Neurologist',
+  "All",
+  "Cardiologist",
+  "Dermatologist",
+  "Pediatrician",
+  "Orthopedic Surgeon",
+  "Neurologist",
 ];
 
 const DoctorsList = () => {
   const navigate = useNavigate();
+
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedSpecialization, setSelectedSpecialization] = useState('All');
+  const [error, setError] = useState("");
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSpecialization, setSelectedSpecialization] =
+    useState("All");
 
   useEffect(() => {
-    const fetchDoctors = async () => {
-      setLoading(true);
-      setError(null);
+    const timeout = setTimeout(() => {
+      fetchDoctors();
+    }, 400);
 
-      try {
-        const params = new URLSearchParams();
-        if (searchTerm) params.append('search', searchTerm);
-        if (selectedSpecialization && selectedSpecialization !== 'All') {
-          params.append('specialization', selectedSpecialization);
-        }
-
-        const response = await fetch(`${API_BASE_URL}/doctors?${params.toString()}`);
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch doctors');
-        }
-
-        const result = await response.json();
-        setDoctors(result.data || []);
-      } catch (err) {
-        setError(
-          'Could not load doctors. Make sure the backend server is running on port 5000.'
-        );
-        setDoctors([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const timeoutId = setTimeout(fetchDoctors, 400);
-    return () => clearTimeout(timeoutId);
+    return () => clearTimeout(timeout);
   }, [searchTerm, selectedSpecialization]);
 
+  const fetchDoctors = async () => {
+    try {
+      setLoading(true);
+      setError("");
+
+      const params = {};
+
+      if (searchTerm) {
+        params.search = searchTerm;
+      }
+
+      if (selectedSpecialization !== "All") {
+        params.specialization = selectedSpecialization;
+      }
+
+      const result = await getDoctors(params);
+
+      setDoctors(result.data || []);
+    } catch (err) {
+      console.error(err);
+
+      setError(
+        "Unable to load doctors. Please make sure the backend server is running."
+      );
+
+      setDoctors([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="bg-slate-50 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 py-12 px-4">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-10 animate-fade-in">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-dark tracking-tight">
+
+        {/* Heading */}
+
+        <div className="text-center mb-10">
+          <h1 className="text-4xl font-extrabold text-dark">
             Find Your Doctor
           </h1>
-          <p className="mt-3 text-slate-500 max-w-xl mx-auto text-sm sm:text-base">
-            Search and filter through our network of specialist doctors and
-            book an appointment in minutes.
+
+          <p className="mt-3 text-slate-500">
+            Search and book appointments with experienced specialists.
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 mb-10 flex flex-col sm:flex-row gap-4 sm:items-end">
-          <div className="flex-1">
-            <Input
-              label="Search Doctor"
-              placeholder="Search by doctor name..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+        {/* Search + Filter */}
 
-          <div className="w-full sm:w-64 flex flex-col gap-1.5">
-            <label className="text-sm font-semibold text-slate-700 tracking-wide">
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 mb-10 flex flex-col md:flex-row gap-5">
+
+          <Input
+            label="Search Doctor"
+            placeholder="Search by doctor name..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="flex-1"
+          />
+
+          <div className="w-full md:w-64">
+
+            <label className="block text-sm font-semibold text-slate-700 mb-2">
               Specialization
             </label>
+
             <select
               value={selectedSpecialization}
-              onChange={(e) => setSelectedSpecialization(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-300"
+              onChange={(e) =>
+                setSelectedSpecialization(e.target.value)
+              }
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20"
             >
               {specializations.map((spec) => (
                 <option key={spec} value={spec}>
@@ -95,68 +113,96 @@ const DoctorsList = () => {
                 </option>
               ))}
             </select>
+
           </div>
+
         </div>
 
+        {/* Loading */}
+
         {loading && (
-          <div className="text-center py-20 text-slate-400 font-medium">
+          <div className="text-center py-20 text-slate-500">
             Loading doctors...
           </div>
         )}
 
+        {/* Error */}
+
         {!loading && error && (
-          <div className="text-center py-20 text-red-500 font-medium">
+          <div className="text-center py-20 text-red-500">
             {error}
           </div>
         )}
 
-        {!loading && !error && (
-          doctors.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {doctors.map((doctor, index) => (
-                <div
-                  key={doctor._id}
-                  className="animate-fade-in"
-                  style={{ animationDelay: `${index * 60}ms`, animationFillMode: 'backwards' }}
-                >
-                <Card className="flex flex-col items-center text-center">
-                  <img
-                    src={doctor.profileImage}
-                    alt={doctor.name}
-                    className="w-24 h-24 rounded-full object-cover border-4 border-blue-50 mb-4"
-                  />
-                  <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-50 text-slate-600 mb-3">
-                    {doctor.specialization}
-                  </span>
-                  <h3 className="text-lg font-bold text-dark">{doctor.name}</h3>
-                  <p className="text-sm text-slate-500 mt-1">{doctor.qualification}</p>
+        {/* Empty */}
 
-                  <div className="flex items-center justify-center gap-4 mt-4 text-sm text-slate-600">
-                    <span className="flex items-center gap-1">
-                      ⭐ <span className="font-semibold">{doctor.rating}</span>
-                    </span>
-                    <span className="flex items-center gap-1">
-                      🩺 <span className="font-semibold">{doctor.experience} yrs</span>
-                    </span>
-                  </div>
-
-                  <Button
-                    variant="primary"
-                    className="w-full mt-6"
-                    onClick={() => navigate(`/doctors/${doctor._id}`)}
-                  >
-                    View Profile
-                  </Button>
-                </Card>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-20 text-slate-400 font-medium">
-              No doctors found matching your search.
-            </div>
-          )
+        {!loading && !error && doctors.length === 0 && (
+          <div className="text-center py-20 text-slate-500">
+            No doctors found.
+          </div>
         )}
+
+        {/* Doctors Grid */}
+
+        {!loading && !error && doctors.length > 0 && (
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            {doctors.map((doctor) => (
+
+              <Card
+                key={doctor._id}
+                className="flex flex-col items-center text-center"
+              >
+
+                <img
+                  src={doctor.profileImage}
+                  alt={doctor.name}
+                  className="w-24 h-24 rounded-full object-cover border-4 border-blue-50 mb-4"
+                />
+
+                <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase bg-slate-100 text-slate-700 mb-3">
+                  {doctor.specialization}
+                </span>
+
+                <h3 className="text-xl font-bold text-dark">
+                  {doctor.name}
+                </h3>
+
+                <p className="text-sm text-slate-500 mt-1">
+                  {doctor.qualification}
+                </p>
+
+                <div className="flex gap-6 mt-4 text-sm">
+
+                  <span>
+                    ⭐ {doctor.rating}
+                  </span>
+
+                  <span>
+                    🩺 {doctor.experience} yrs
+                  </span>
+
+                </div>
+
+                <Button
+                  variant="primary"
+                  className="w-full mt-6"
+                  onClick={() =>
+                    navigate(`/doctors/${doctor._id}`)
+                  }
+                >
+                  View Profile
+                </Button>
+
+              </Card>
+
+            ))}
+
+          </div>
+
+        )}
+
       </div>
     </div>
   );
