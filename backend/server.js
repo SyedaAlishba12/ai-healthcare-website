@@ -2,8 +2,8 @@ import dns from "dns";
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
+import cors from "cors";
 
 import connectDB from "./config/db.js";
 
@@ -11,6 +11,12 @@ import authRoutes from "./routes/authRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
 import emergencyRoutes from "./routes/emergencyRoutes.js";
 import doctorRoutes from "./routes/doctorRoutes.js";
+import appointmentRoutes from "./routes/appointmentRoutes.js";
+
+import medicineRoutes from "./routes/medicineRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
+import blogRoutes from "./routes/blogRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 
 dotenv.config();
 
@@ -21,7 +27,7 @@ const app = express();
 
 /*
 |--------------------------------------------------------------------------
-| Middleware
+| Global Middleware
 |--------------------------------------------------------------------------
 */
 
@@ -61,12 +67,32 @@ app.get("/api/health", (req, res) => {
 |--------------------------------------------------------------------------
 */
 
+// Authentication
 app.use("/api/auth", authRoutes);
+
+// Contact
 app.use("/api/contact", contactRoutes);
+
+// Emergency
 app.use("/api/emergency", emergencyRoutes);
 
-// Doctor Module
+// Doctors
 app.use("/api/doctors", doctorRoutes);
+
+// Appointments
+app.use("/api/appointments", appointmentRoutes);
+
+// Medicines
+app.use("/api/medicines", medicineRoutes);
+
+// Cart
+app.use("/api/cart", cartRoutes);
+
+// Blogs
+app.use("/api/blogs", blogRoutes);
+
+// Orders
+app.use("/api/orders", orderRoutes);
 
 /*
 |--------------------------------------------------------------------------
