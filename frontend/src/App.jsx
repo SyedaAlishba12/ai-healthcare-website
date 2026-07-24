@@ -1,10 +1,10 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import Navbar from "./components/Navbar/Navbar";
+import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import ScrollToTop from "./components/ScrollToTop";
-
+import Chatbot from "./components/Chatbot"; // Import is correct because of your index.jsx barrel file!
 
 import Home from "./pages/Home/Home";
 import Blog from "./pages/Blog/Blog"; 
@@ -19,6 +19,8 @@ import MedicineDetails from "./pages/MedicineDetails/MedicineDetails";
 import Cart from "./pages/Cart/Cart";
 import Checkout from "./pages/Checkout/Checkout";
 
+import LabTests from "./pages/LabTests";
+import Hospitals from "./pages/Hospitals";
 
 function App() {
   return (
@@ -44,11 +46,16 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
 
+          <Route path="/lab-tests" element={<LabTests />} />
+          <Route path="/hospitals" element={<Hospitals />} />
+          {/* REMOVED the /chat route from here */}
         </Routes>
       </main>
 
       <Footer />
       
+      {/* ADD THE CHATBOT HERE - Outside the routes so it floats globally */}
+      <Chatbot />
 
     </div>
   );

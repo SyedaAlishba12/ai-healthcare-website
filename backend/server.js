@@ -3,39 +3,44 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 import express from "express";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
+import cors from "cors";
+import connectDB from "./config/db.js";
+
 import doctorRoutes from "./routes/doctorRoutes.js";
 import appointmentRoutes from "./routes/appointmentRoutes.js";
-import cors from 'cors';
-import connectDB from './config/db.js'; 
-import medicineRoutes from './routes/medicineRoutes.js';
-import cartRoutes from './routes/cartRoutes.js';
+import medicineRoutes from "./routes/medicineRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
 import blogRoutes from "./routes/blogRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import labRoutes from "./routes/labRoutes.js";
+import hospitalRoutes from "./routes/hospitalRoutes.js";
+import chatRoutes from "./routes/chatRoutes.js";
+
+
 dotenv.config();
 
-// Connect to Cloud Database
-connectDB(); 
+// Connect Database
+connectDB();
 
 const app = express();
 
 // ==========================================
-// 1. GLOBAL MIDDLEWARES 
+// 1. GLOBAL MIDDLEWARES
 // ==========================================
+
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
   })
 );
-app.use(express.json()); 
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // ==========================================
-// 2. API ROUTES
+// 2. HEALTH ROUTES
 // ==========================================
-app.use('/api/medicines', medicineRoutes); 
-app.use('/api/cart', cartRoutes);
-app.use("/api/blogs", blogRoutes);
-app.use("/api/orders", orderRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({
@@ -51,19 +56,37 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+// ==========================================
+// 3. API ROUTES
+// ==========================================
+
 app.use("/api/doctors", doctorRoutes);
 app.use("/api/appointments", appointmentRoutes);
+app.use("/api/medicines", medicineRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/blogs", blogRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/lab-tests", labRoutes);
+app.use("/api/hospitals", hospitalRoutes);
+app.use("/api/chat", chatRoutes);
+
+// ==========================================
+// 4. 404 HANDLER
+// ==========================================
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+  });
+});
+
+// ==========================================
+// 5. START SERVER
+// ==========================================
 
 const PORT = process.env.PORT || 5000;
 
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log("MongoDB connected");
-    app.listen(PORT, () => {
-      console.log(`Healthcare server is running on http://localhost:${PORT}`);
-    });
-  })
-  .catch((err) => {
-    console.error("MongoDB connection failed:", err.message);
-  });
+app.listen(PORT, () => {
+  console.log(`Healthcare server is running on http://localhost:${PORT}`);
+});
