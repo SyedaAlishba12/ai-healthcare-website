@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
-import Navbar from "./components/navbar/Navbar";
+import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import ScrollToTop from "./components/ScrollToTop";
 import Chatbot from "./components/Chatbot";
@@ -47,8 +47,9 @@ import PublicRoute from "./components/PublicRoute";
 function App() {
   const location = useLocation();
 
-  // Hide Navbar/Footer on Splash, Login, Register, and Forgot Password
-  const hideLayout = ['/', '/login', '/register', '/forgot-password'].includes(location.pathname);
+  // Hide Navbar/Footer/Chatbot on authentication pages
+  const authRoutes = ['/', '/login', '/register', '/forgot-password'];
+  const hideLayout = authRoutes.includes(location.pathname);
 
   return (
     <div className="flex min-h-screen flex-col bg-lightBg selection:bg-primary/20">
@@ -58,7 +59,7 @@ function App() {
 
       <main className="flex-grow">
         <Routes>
-          {/* Splash */}
+          {/* Splash Screen */}
           <Route path="/" element={<Splash />} />
 
           {/* Protected Home */}
@@ -71,7 +72,7 @@ function App() {
             }
           />
 
-          {/* Authentication */}
+          {/* Authentication Routes */}
           <Route
             path="/login"
             element={
@@ -226,7 +227,7 @@ function App() {
 
       {!hideLayout && <Footer />}
 
-      {/* Floating Chatbot — visible on all pages except Splash */}
+      {/* Floating Chatbot — visible on all pages except auth screens */}
       {!hideLayout && <Chatbot />}
     </div>
   );

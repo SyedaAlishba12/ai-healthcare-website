@@ -6,6 +6,10 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
 
+// Import all route modules
+import authRoutes from "./routes/authRoutes.js";
+import contactRoutes from "./routes/contactRoutes.js";
+import emergencyRoutes from "./routes/emergencyRoutes.js";
 import doctorRoutes from "./routes/doctorRoutes.js";
 import appointmentRoutes from "./routes/appointmentRoutes.js";
 import medicineRoutes from "./routes/medicineRoutes.js";
@@ -16,7 +20,6 @@ import labRoutes from "./routes/labRoutes.js";
 import hospitalRoutes from "./routes/hospitalRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
 
-
 dotenv.config();
 
 // Connect Database
@@ -25,7 +28,7 @@ connectDB();
 const app = express();
 
 // ==========================================
-// 1. GLOBAL MIDDLEWARES
+// 1. GLOBAL MIDDLEWARE
 // ==========================================
 
 app.use(
@@ -60,6 +63,9 @@ app.get("/api/health", (req, res) => {
 // 3. API ROUTES
 // ==========================================
 
+app.use("/api/auth", authRoutes);
+app.use("/api/contact", contactRoutes);
+app.use("/api/emergency", emergencyRoutes);
 app.use("/api/doctors", doctorRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/medicines", medicineRoutes);
@@ -69,6 +75,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/lab-tests", labRoutes);
 app.use("/api/hospitals", hospitalRoutes);
 app.use("/api/chat", chatRoutes);
+
 // ==========================================
 // 4. 404 HANDLER
 // ==========================================
