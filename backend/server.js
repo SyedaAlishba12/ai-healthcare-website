@@ -1,21 +1,47 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
+import dns from "dns";
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+
+import connectDB from "./config/db.js";
+
+import authRoutes from "./routes/authRoutes.js";
+import contactRoutes from "./routes/contactRoutes.js";
+import emergencyRoutes from "./routes/emergencyRoutes.js";
+import doctorRoutes from "./routes/doctorRoutes.js";
+import appointmentRoutes from "./routes/appointmentRoutes.js";
+import medicineRoutes from "./routes/medicineRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
+import blogRoutes from "./routes/blogRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 
 dotenv.config();
 
+// Connect Database
+connectDB();
+
 const app = express();
 
-// Middleware
+// ==========================================
+// 1. GLOBAL MIDDLEWARE
+// ==========================================
+
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
   })
 );
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Test route
+// ==========================================
+// 2. HEALTH ROUTES
+// ==========================================
+
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
@@ -23,13 +49,58 @@ app.get("/", (req, res) => {
   });
 });
 
-// API health-check route
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     success: true,
     message: "Server is healthy",
   });
 });
+
+// ==========================================
+// 3. API ROUTES
+// ==========================================
+
+// Authentication
+app.use("/api/auth", authRoutes);
+
+// Contact
+app.use("/api/contact", contactRoutes);
+
+// Emergency
+app.use("/api/emergency", emergencyRoutes);
+
+// Doctors
+app.use("/api/doctors", doctorRoutes);
+
+// Appointments
+app.use("/api/appointments", appointmentRoutes);
+
+// Medicines
+app.use("/api/medicines", medicineRoutes);
+
+// Cart
+app.use("/api/cart", cartRoutes);
+
+// Blogs
+app.use("/api/blogs", blogRoutes);
+
+// Orders
+app.use("/api/orders", orderRoutes);
+
+// ==========================================
+// 4. 404 HANDLER
+// ==========================================
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Route not found",
+  });
+});
+
+// ==========================================
+// 5. START SERVER
+// ==========================================
 
 const PORT = process.env.PORT || 5000;
 
