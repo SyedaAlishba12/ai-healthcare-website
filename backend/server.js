@@ -12,7 +12,6 @@ import contactRoutes from "./routes/contactRoutes.js";
 import emergencyRoutes from "./routes/emergencyRoutes.js";
 import doctorRoutes from "./routes/doctorRoutes.js";
 import appointmentRoutes from "./routes/appointmentRoutes.js";
-
 import medicineRoutes from "./routes/medicineRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import blogRoutes from "./routes/blogRoutes.js";
@@ -25,11 +24,9 @@ connectDB();
 
 const app = express();
 
-/*
-|--------------------------------------------------------------------------
-| Global Middleware
-|--------------------------------------------------------------------------
-*/
+// ==========================================
+// 1. GLOBAL MIDDLEWARE
+// ==========================================
 
 app.use(
   cors({
@@ -41,11 +38,9 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/*
-|--------------------------------------------------------------------------
-| Health Routes
-|--------------------------------------------------------------------------
-*/
+// ==========================================
+// 2. HEALTH ROUTES
+// ==========================================
 
 app.get("/", (req, res) => {
   res.status(200).json({
@@ -61,11 +56,9 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-*/
+// ==========================================
+// 3. API ROUTES
+// ==========================================
 
 // Authentication
 app.use("/api/auth", authRoutes);
@@ -94,11 +87,9 @@ app.use("/api/blogs", blogRoutes);
 // Orders
 app.use("/api/orders", orderRoutes);
 
-/*
-|--------------------------------------------------------------------------
-| 404 Handler
-|--------------------------------------------------------------------------
-*/
+// ==========================================
+// 4. 404 HANDLER
+// ==========================================
 
 app.use((req, res) => {
   res.status(404).json({
@@ -107,11 +98,9 @@ app.use((req, res) => {
   });
 });
 
-/*
-|--------------------------------------------------------------------------
-| Start Server
-|--------------------------------------------------------------------------
-*/
+// ==========================================
+// 5. START SERVER
+// ==========================================
 
 const PORT = process.env.PORT || 5000;
 

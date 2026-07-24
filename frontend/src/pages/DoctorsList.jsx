@@ -71,7 +71,6 @@ const DoctorsList = () => {
       <div className="max-w-7xl mx-auto">
 
         {/* Heading */}
-
         <div className="text-center mb-10">
           <h1 className="text-4xl font-extrabold text-dark">
             Find Your Doctor
@@ -83,7 +82,6 @@ const DoctorsList = () => {
         </div>
 
         {/* Search + Filter */}
-
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 mb-10 flex flex-col md:flex-row gap-5">
 
           <Input
@@ -95,7 +93,6 @@ const DoctorsList = () => {
           />
 
           <div className="w-full md:w-64">
-
             <label className="block text-sm font-semibold text-slate-700 mb-2">
               Specialization
             </label>
@@ -113,13 +110,10 @@ const DoctorsList = () => {
                 </option>
               ))}
             </select>
-
           </div>
-
         </div>
 
         {/* Loading */}
-
         {loading && (
           <div className="text-center py-20 text-slate-500">
             Loading doctors...
@@ -127,7 +121,6 @@ const DoctorsList = () => {
         )}
 
         {/* Error */}
-
         {!loading && error && (
           <div className="text-center py-20 text-red-500">
             {error}
@@ -135,7 +128,6 @@ const DoctorsList = () => {
         )}
 
         {/* Empty */}
-
         {!loading && !error && doctors.length === 0 && (
           <div className="text-center py-20 text-slate-500">
             No doctors found.
@@ -143,13 +135,10 @@ const DoctorsList = () => {
         )}
 
         {/* Doctors Grid */}
-
         {!loading && !error && doctors.length > 0 && (
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
             {doctors.map((doctor) => (
-
               <Card
                 key={doctor._id}
                 className="flex flex-col items-center text-center"
@@ -174,15 +163,8 @@ const DoctorsList = () => {
                 </p>
 
                 <div className="flex gap-6 mt-4 text-sm">
-
-                  <span>
-                    ⭐ {doctor.rating}
-                  </span>
-
-                  <span>
-                    🩺 {doctor.experience} yrs
-                  </span>
-
+                  <span>⭐ {doctor.rating}</span>
+                  <span>🩺 {doctor.experience} yrs</span>
                 </div>
 
                 <Button
@@ -196,11 +178,9 @@ const DoctorsList = () => {
                 </Button>
 
               </Card>
-
             ))}
 
           </div>
-
         )}
 
       </div>

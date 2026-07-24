@@ -102,10 +102,10 @@ const DoctorDetails = () => {
             <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-50 text-slate-600 mb-3">
               {doctor.specialization}
             </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-dark">{doctor.name}</h1>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-dark break-words">{doctor.name}</h1>
             <p className="text-slate-500 mt-1">{doctor.qualification}</p>
 
-            <div className="flex items-center justify-center sm:justify-start gap-6 mt-4 text-sm text-slate-600">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-6 gap-y-2 mt-4 text-sm text-slate-600">
               <span className="flex items-center gap-1">
                 ⭐ <span className="font-semibold">{doctor.rating}</span> rating
               </span>

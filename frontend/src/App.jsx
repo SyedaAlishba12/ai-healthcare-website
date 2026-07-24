@@ -42,6 +42,7 @@ import PublicRoute from "./components/PublicRoute";
 function App() {
   const location = useLocation();
 
+  // Hide Navbar & Footer on Splash screen
   const hideLayout = location.pathname === "/";
 
   return (
@@ -178,7 +179,7 @@ function App() {
             }
           />
 
-          {/* Contact & Emergency */}
+          {/* Emergency */}
           <Route
             path="/emergency"
             element={
@@ -188,6 +189,7 @@ function App() {
             }
           />
 
+          {/* Contact */}
           <Route
             path="/contact"
             element={
