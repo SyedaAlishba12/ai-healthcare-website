@@ -17,7 +17,7 @@ const Footer = () => {
         <div>
           <h3 className="text-lg font-bold mb-4 text-secondary">Quick Navigation</h3>
           <ul className="space-y-2 text-sm text-gray-400">
-            <li><Link to="/" className="hover:text-primary transition">Home</Link></li>
+            <li><Link to="/home" className="hover:text-primary transition">Home</Link></li>
             <li><Link to="/doctors" className="hover:text-primary transition">Doctors Appointment</Link></li>
             <li><Link to="/medicines" className="hover:text-primary transition">Medicine Store</Link></li>
             <li><Link to="/emergency" className="hover:text-emergency transition font-semibold">Emergency Contacts</Link></li>

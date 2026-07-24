@@ -69,7 +69,6 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/lab-tests", labRoutes);
 app.use("/api/hospitals", hospitalRoutes);
 app.use("/api/chat", chatRoutes);
-
 // ==========================================
 // 4. 404 HANDLER
 // ==========================================

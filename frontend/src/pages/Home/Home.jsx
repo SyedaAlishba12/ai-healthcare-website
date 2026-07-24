@@ -260,7 +260,7 @@ const Home = () => {
               Join HealthPulse today and take control of your medical needs with just a few clicks.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Link to="/signup">
+              <Link to="/register">
                 <Button variant="primary" className="px-8 py-3 text-base">Get Started Now</Button>
               </Link>
               <Link to="/emergency">
