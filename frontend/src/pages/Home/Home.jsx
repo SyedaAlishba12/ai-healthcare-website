@@ -9,13 +9,13 @@ const useCountUp = (target, start, duration = 2000) => {
 
   useEffect(() => {
     if (!start) return;
-    
+
     let startTime = null;
     const animateCount = (currentTime) => {
       if (!startTime) startTime = currentTime;
       const progress = Math.min((currentTime - startTime) / duration, 1);
       setCount(Math.floor(progress * target));
-      
+
       if (progress < 1) {
         requestAnimationFrame(animateCount);
       } else {
@@ -32,7 +32,7 @@ const useCountUp = (target, start, duration = 2000) => {
 const Home = () => {
   const [doctors, setDoctors] = useState([]);
   const [loadingDoctors, setLoadingDoctors] = useState(true);
-  
+
   const [statsInView, setStatsInView] = useState(false);
   const statsRef = useRef(null);
 
@@ -199,7 +199,7 @@ const Home = () => {
                   <h3 className="text-lg font-bold text-dark">Dr. {doctor.name}</h3>
                   <p className="text-sm text-primary font-semibold mb-2">{doctor.specialization}</p>
                   <p className="text-xs text-slate-400 mb-4">{doctor.experience}+ Years Experience</p>
-                  
+
                   <div className="flex items-center justify-center gap-1 mb-4">
                     <span className="text-secondary font-bold text-sm">★ {doctor.rating.toFixed(1)}</span>
                   </div>
@@ -250,13 +250,16 @@ const Home = () => {
       {/* ==========================================
           6. CTA SECTION
       ========================================== */}
+      {/* ==========================================
+    6. CTA SECTION
+========================================== */}
       <section className="py-20 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Card className="bg-dark text-center p-10 sm:p-16 border-none hoverEffect={false}">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-4">
+          <Card className="text-center p-10 sm:p-16">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-dark tracking-tight mb-4">
               Experience Smart Healthcare Today
             </h2>
-            <p className="text-slate-400 mb-8 max-w-xl mx-auto">
+            <p className="text-slate-500 mb-8 max-w-xl mx-auto">
               Join HealthPulse today and take control of your medical needs with just a few clicks.
             </p>
             <div className="flex flex-wrap justify-center gap-4">

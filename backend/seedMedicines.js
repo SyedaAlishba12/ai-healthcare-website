@@ -1,4 +1,7 @@
 // backend/seedMedicines.js
+import dns from "dns";
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import Medicine from './models/Medicine.js'; // '.js' extension zaroori hai
@@ -105,6 +108,26 @@ const dummyMedicines = [
     "description": "Long-term controller/preventer aerosol. Combines a corticosteroid and a long-acting beta-agonist (LABA) to keep chronic asthma and COPD under daily maintenance control.",
     "dosage": "1 to 2 inhalations twice daily (morning and evening). Rinse mouth thoroughly with water after each use.",
     "manufacturer": "AstraZeneca",
+    "stock": true
+  },
+  {
+    "name": "Calpol Syrup (Paracetamol)",
+    "category": "Syrups",
+    "price": 75,
+    "image": "/images/calpol.jpg",
+    "description": "Pediatric fever and pain relief syrup, gentle on the stomach and suitable for children of various ages.",
+    "dosage": "Dosage based on child's weight/age, typically 5ml three to four times daily as needed.",
+    "manufacturer": "GlaxoSmithKline (GSK)",
+    "stock": true
+  },
+  {
+    "name": "Augmentin Tablet (Amoxicillin + Clavulanic Acid)",
+    "category": "Tablets",
+    "price": 450,
+    "image": "/images/augmentin.jpg",
+    "description": "Combination antibiotic effective against a broader range of bacterial infections than amoxicillin alone, including resistant strains.",
+    "dosage": "1 tablet twice daily for 5 to 7 days, or as prescribed. Complete the full course.",
+    "manufacturer": "GlaxoSmithKline (GSK)",
     "stock": true
   }
 ];
