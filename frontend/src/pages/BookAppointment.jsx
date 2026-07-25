@@ -44,7 +44,12 @@ const BookAppointment = () => {
       }
     };
     fetchDoctor();
+  
   }, [id]);
+
+  useEffect(() => {
+  sessionStorage.removeItem("redirectAfterLogin");
+}, []);
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));

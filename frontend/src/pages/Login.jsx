@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import Button from "../components/UI/Button";
 import Input from "../components/UI/Input";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -26,20 +27,18 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setError("");
     setLoading(true);
 
     try {
       const response = await login(formData);
 
-      if (response.success) {
-        navigate("/home");
-      }
+if (response.success) {
+
+  return; // important
+}
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Login failed."
-      );
+      setError(err.response?.data?.message || "Login failed.");
     } finally {
       setLoading(false);
     }

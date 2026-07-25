@@ -3,7 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../../components/UI/Button';
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
+<<<<<<< HEAD
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+=======
+import api from '../../services/api';
+
+>>>>>>> e535db99176b18db8c257dde098a52d64c922c67
 const USER_ID = 'guest_user_123';
 
 const Checkout = () => {
@@ -22,20 +27,21 @@ const Checkout = () => {
   const [placingOrder, setPlacingOrder] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(null);
   const [error, setError] = useState('');
+  
 
   const fetchCart = async () => {
     try {
       setLoadingCart(true);
       setError('');
 
+<<<<<<< HEAD
 const response = await fetch(`${API_BASE_URL}/cart?userId=${USER_ID}`);
       const result = await response.json();
+=======
+      const result = await api.get(`/cart?userId=${USER_ID}`).then(r => r.data);
+>>>>>>> e535db99176b18db8c257dde098a52d64c922c67
 
-      if (!response.ok || !result.success) {
-        throw new Error(result.message || 'Could not fetch cart');
-      }
-
-      setCartItems(result.data.items || []);
+      setCartItems(result.data?.items || []);
     } catch (err) {
       setError(err.message || 'Failed to load checkout cart');
     } finally {
@@ -46,6 +52,10 @@ const response = await fetch(`${API_BASE_URL}/cart?userId=${USER_ID}`);
   useEffect(() => {
     fetchCart();
   }, []);
+
+  useEffect(() => {
+  sessionStorage.removeItem("redirectAfterLogin");
+}, []);
 
   const subtotal = cartItems.reduce((acc, item) => {
     const medicine = item.medicineId;
@@ -125,6 +135,14 @@ const response = await fetch(`${API_BASE_URL}/orders`, {
       if (!response.ok || !result.success) {
         throw new Error(result.message || 'Failed to place order');
       }
+      const result = await api.post('/orders', {
+        userId: USER_ID,
+        fullName: formData.fullName,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        deliveryAddress: formData.deliveryAddress,
+        paymentMethod: formData.paymentMethod,
+      }).then(r => r.data);
 
       window.dispatchEvent(new Event('cartUpdate'));
       setCartItems([]);
@@ -214,6 +232,8 @@ const response = await fetch(`${API_BASE_URL}/orders`, {
       </div>
     );
   }
+
+console.log("Checkout rendered - cartItems:", cartItems.length, "loadingCart:", loadingCart);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-[70vh]">
