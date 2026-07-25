@@ -60,7 +60,11 @@ const Register = () => {
       });
 
       if (response.success) {
-        navigate("/home");
+        // Same redirect logic as Login — DON'T delete sessionStorage
+        const savedPath = sessionStorage.getItem("redirectAfterLogin");
+
+        const from = savedPath || "/home";
+        navigate(from, { replace: true });
       }
     } catch (err) {
       setError(
@@ -160,6 +164,7 @@ const Register = () => {
             </button>
 
           </div>
+
           <Button
             type="submit"
             variant="primary"

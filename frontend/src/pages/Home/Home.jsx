@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../components/UI/Button';
 import Card from '../../components/UI/Card';
+import { useNavigate } from 'react-router-dom'
 
 // Custom Hook for Counter Animation
 const useCountUp = (target, start, duration = 2000) => {
@@ -35,7 +36,8 @@ const Home = () => {
   
   const [statsInView, setStatsInView] = useState(false);
   const statsRef = useRef(null);
-
+  
+ 
   // Fetch Featured Doctors
   useEffect(() => {
     const fetchDoctors = async () => {
