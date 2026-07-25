@@ -3,12 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../../components/UI/Button';
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
-<<<<<<< HEAD
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
-=======
 import api from '../../services/api';
 
->>>>>>> e535db99176b18db8c257dde098a52d64c922c67
 const USER_ID = 'guest_user_123';
 
 const Checkout = () => {
@@ -34,12 +31,9 @@ const Checkout = () => {
       setLoadingCart(true);
       setError('');
 
-<<<<<<< HEAD
 const response = await fetch(`${API_BASE_URL}/cart?userId=${USER_ID}`);
       const result = await response.json();
-=======
       const result = await api.get(`/cart?userId=${USER_ID}`).then(r => r.data);
->>>>>>> e535db99176b18db8c257dde098a52d64c922c67
 
       setCartItems(result.data?.items || []);
     } catch (err) {
