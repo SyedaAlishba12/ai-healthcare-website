@@ -45,6 +45,22 @@ const emergencyContacts = [
     description: "Emergency Police Service",
     available24Hours: true,
   },
+  {
+    type: "ambulance",
+    name: "Chhipa Ambulance",
+    phone: "1020",
+    address: "Hyderabad",
+    description: "24/7 Free Ambulance Service",
+    available24Hours: true,
+  },
+  {
+    type: "hospital",
+    name: "Isra University Hospital",
+    phone: "0223411641",
+    address: "Hyderabad",
+    description: "Private Teaching Hospital with Emergency Ward",
+    available24Hours: true,
+  },
 ];
 
 const importData = async () => {
