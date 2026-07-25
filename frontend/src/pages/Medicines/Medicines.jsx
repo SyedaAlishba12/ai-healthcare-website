@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/UI/Button';
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 const Medicines = () => {
   const navigate = useNavigate();
   const [medicines, setMedicines] = useState([]);
@@ -19,7 +19,7 @@ const Medicines = () => {
       try {
         setLoading(true);
         // We call our live server API running on port 5000
-        const response = await fetch('http://localhost:5000/api/medicines');
+const response = await fetch(`${API_BASE_URL}/medicines`);
         
         if (!response.ok) {
           throw new Error('Failed to retrieve data from the server');
@@ -54,8 +54,8 @@ const Medicines = () => {
       return;
     }
 
-    const response = await fetch('http://localhost:5000/api/cart/add', {
-      method: 'POST',
+const response = await fetch(`${API_BASE_URL}/cart/add`, {
+        method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },

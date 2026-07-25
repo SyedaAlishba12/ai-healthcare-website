@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 const MedicineDetails = () => {
   const { id } = useParams();
@@ -15,8 +16,7 @@ const MedicineDetails = () => {
     const fetchMedicineDetails = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5000/api/medicines/${id}`);
-        
+const response = await fetch(`${API_BASE_URL}/medicines/${id}`);        
         if (!response.ok) {
           throw new Error('Failed to retrieve product specifications');
         }
@@ -52,7 +52,7 @@ const MedicineDetails = () => {
   try {
     const resolvedId = medicine._id || medicine.id || id;
 
-    const response = await fetch('http://localhost:5000/api/cart/add', {
+    const response = await fetch('${API_BASE_URL}/cart/add', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

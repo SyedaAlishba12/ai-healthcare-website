@@ -7,10 +7,9 @@
  * Requires MONGODB_URI to be set in backend/.env
  */
 
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const LabTest = require('./models/LabTest');
-
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import LabTest from './models/LabTest.js';
 dotenv.config();
 
 const SAMPLE_TESTS = [

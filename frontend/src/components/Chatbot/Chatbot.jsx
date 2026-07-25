@@ -12,6 +12,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Button from '../UI/Button';
 import './Chatbot.css';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const DISCLAIMER =
@@ -124,7 +125,7 @@ const Chatbot = () => {
       const timeoutId = setTimeout(() => controller.abort(), 15000);
 
       try {
-        const res = await fetch('http://localhost:5000/api/chat', {
+        const res = await fetch(`${API_BASE_URL}/chat`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ sessionId: sessionId.current, message: content }),
@@ -197,7 +198,7 @@ const Chatbot = () => {
     setMessages([WELCOME_MESSAGE]);
     setNetworkError('');
     try {
-    await fetch(`http://localhost:5000/api/chat/history/${sessionId.current}`, { method: 'DELETE' });
+    await fetch(`${API_BASE_URL}/chat/history/${sessionId.current}`, { method: 'DELETE' });
     } catch {
       // Ignore — local state is already cleared
     }

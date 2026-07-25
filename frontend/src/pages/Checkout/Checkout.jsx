@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../../components/UI/Button';
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 const USER_ID = 'guest_user_123';
 
 const Checkout = () => {
@@ -28,7 +28,7 @@ const Checkout = () => {
       setLoadingCart(true);
       setError('');
 
-      const response = await fetch(`http://localhost:5000/api/cart?userId=${USER_ID}`);
+const response = await fetch(`${API_BASE_URL}/cart?userId=${USER_ID}`);
       const result = await response.json();
 
       if (!response.ok || !result.success) {
@@ -105,7 +105,7 @@ const Checkout = () => {
       setPlacingOrder(true);
       setError('');
 
-      const response = await fetch('http://localhost:5000/api/orders', {
+const response = await fetch(`${API_BASE_URL}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../components/UI/Button';
 import Card from '../../components/UI/Card';
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 // Custom Hook for Counter Animation
 const useCountUp = (target, start, duration = 2000) => {
   const [count, setCount] = useState(0);
@@ -40,7 +40,7 @@ const Home = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/doctors');
+const response = await fetch(`${API_BASE_URL}/doctors`);
         const result = await response.json();
         if (response.ok && result.success) {
           setDoctors(result.data.slice(0, 4)); // Top 4 doctors

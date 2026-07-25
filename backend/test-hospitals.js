@@ -3,10 +3,11 @@
  * Run: node test-hospitals.js  (backend must be running on :5000)
  */
 const http = require('http');
-
+const PORT = process.env.PORT || 5000;
 function request(path) {
   return new Promise((resolve) => {
-    const req = http.get(`http://localhost:5000${path}`, (res) => {
+const req = http.get(`http://localhost:${PORT}${path}`, (res) => {
+
       let data = '';
       res.on('data', (c) => (data += c));
       res.on('end', () => {

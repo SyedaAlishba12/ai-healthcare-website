@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../../components/UI/Button';
 import Card from '../../components/UI/Card';
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 const Blog = () => {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,7 +25,7 @@ const Blog = () => {
       setLoading(true);
       setError('');
 
-      let url = 'http://localhost:5000/api/blogs';
+      let url = `${API_BASE_URL}/blogs`;
       if (category && category !== 'All') {
         url += `?category=${encodeURIComponent(category)}`;
       }
