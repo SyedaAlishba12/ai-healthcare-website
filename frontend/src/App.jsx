@@ -75,10 +75,11 @@ function App() {
   <Route path="/doctors/:id" element={<DoctorDetails />} />
   <Route path="/medicines" element={<Medicines />} />
   <Route path="/medicines/:id" element={<MedicineDetails />} />
+  <Route path="/lab-tests" element={<LabTests />}/>
   <Route path="/cart" element={<Cart />} />
   <Route path="/blog" element={<Blog />} />
   <Route path="/blog/:id" element={<BlogDetails />} />
-  <Route path="/lab-tests" element={<LabTests />} />
+
   <Route path="/hospitals" element={<Hospitals />} />
   <Route path="/emergency" element={<Emergency />} />
   <Route path="/contact" element={<Contact />} />
@@ -86,6 +87,7 @@ function App() {
   {/* Protected routes */}
   <Route path="/book-appointment/:id" element={<ProtectedRoute><BookAppointment /></ProtectedRoute>} />
   <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+\
 </Routes>
       </main>
 

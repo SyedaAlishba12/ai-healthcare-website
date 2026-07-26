@@ -60,16 +60,15 @@ const Register = () => {
       });
 
       if (response.success) {
-        // Same redirect logic as Login — DON'T delete sessionStorage
+        // Same redirect logic as Login
         const savedPath = sessionStorage.getItem("redirectAfterLogin");
-
         const from = savedPath || "/home";
+        sessionStorage.removeItem("redirectAfterLogin");
         navigate(from, { replace: true });
       }
     } catch (err) {
       setError(
-        err.response?.data?.message ||
-        "Registration failed."
+        err.response?.data?.message || "Registration failed."
       );
     } finally {
       setLoading(false);
@@ -79,6 +78,16 @@ const Register = () => {
   return (
     <div className="min-h-[80vh] flex justify-center items-center bg-lightBg px-4">
       <div className="bg-white shadow-lg rounded-3xl w-full max-w-md p-8">
+
+        {/* Back to Home button */}
+        <div className="mb-4">
+          <Link
+            to="/home"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-primary transition-colors"
+          >
+            ← Back to Home
+          </Link>
+        </div>
 
         <h1 className="text-3xl font-bold text-center text-dark">
           Create Account

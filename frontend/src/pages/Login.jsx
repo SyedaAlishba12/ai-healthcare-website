@@ -33,10 +33,18 @@ const Login = () => {
     try {
       const response = await login(formData);
 
-if (response.success) {
-
-  return; // important
-}
+      if (response.success) {
+        const savedPath = sessionStorage.getItem("redirectAfterLogin");
+        console.log("Login - savedPath:", savedPath);
+        
+        const from = savedPath || location.state?.from || "/home";
+        console.log("Login - redirecting to:", from);
+        
+        sessionStorage.removeItem("redirectAfterLogin");
+        
+        // Use window.location for a clean redirect
+        window.location.href = from;
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed.");
     } finally {
@@ -47,6 +55,16 @@ if (response.success) {
   return (
     <div className="min-h-[80vh] flex justify-center items-center bg-lightBg px-4">
       <div className="bg-white shadow-lg rounded-3xl w-full max-w-md p-8">
+
+        {/* Back to Home button */}
+        <div className="mb-4">
+          <Link
+            to="/home"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-primary transition-colors"
+          >
+            ← Back to Home
+          </Link>
+        </div>
 
         <h1 className="text-3xl font-bold text-center text-dark">
           Welcome Back

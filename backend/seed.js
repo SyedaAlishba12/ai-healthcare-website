@@ -13,10 +13,6 @@ import LabTest from './models/LabTest.js';
 import dns from "dns";
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import LabTest from "./models/LabTest.js";
-
 dotenv.config();
 
 const SAMPLE_TESTS = [
