@@ -87,7 +87,7 @@ function App() {
   {/* Protected routes */}
   <Route path="/book-appointment/:id" element={<ProtectedRoute><BookAppointment /></ProtectedRoute>} />
   <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-\
+
 </Routes>
       </main>
 
