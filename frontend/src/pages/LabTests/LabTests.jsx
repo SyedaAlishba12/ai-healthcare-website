@@ -3,6 +3,9 @@ import Card from '../../components/UI/Card';
 import Button from '../../components/UI/Button';
 import Input from '../../components/UI/Input';
 
+// Backend base URL — matches the deployed Render server.
+const API_BASE_URL = 'https://ai-healthcare-website.onrender.com/api';
+
 // ─── helpers ────────────────────────────────────────────────────────────────
 
 /** Today in YYYY-MM-DD (local time), used as min attr on the date picker */
@@ -56,7 +59,7 @@ const BookingModal = ({ test, onClose }) => {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/lab-tests/book', {
+      const res = await fetch(`${API_BASE_URL}/lab-tests/book`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, testId: test._id }),
@@ -321,7 +324,7 @@ const LabTests = () => {
     setLoading(true);
     setFetchError('');
     try {
-      const res = await fetch('/api/lab-tests');
+      const res = await fetch(`${API_BASE_URL}/lab-tests`);
       const json = await res.json();
       if (!res.ok || !json.success) throw new Error(json.message);
       setTests(json.data);
