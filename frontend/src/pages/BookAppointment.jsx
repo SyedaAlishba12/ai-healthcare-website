@@ -3,8 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import Card from '../components/UI/Card';
 import Button from '../components/UI/Button';
 import Input from '../components/UI/Input';
-
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 const BookAppointment = () => {
   const { id } = useParams(); // doctor id
@@ -45,7 +44,12 @@ const BookAppointment = () => {
       }
     };
     fetchDoctor();
+  
   }, [id]);
+
+  useEffect(() => {
+  sessionStorage.removeItem("redirectAfterLogin");
+}, []);
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));

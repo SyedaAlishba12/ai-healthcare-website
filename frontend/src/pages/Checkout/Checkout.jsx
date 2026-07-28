@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../../components/UI/Button';
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
+import api from '../../services/api';
 
 const USER_ID = 'guest_user_123';
 
@@ -28,14 +29,9 @@ const Checkout = () => {
       setLoadingCart(true);
       setError('');
 
-      const response = await fetch(`http://localhost:5000/api/cart?userId=${USER_ID}`);
-      const result = await response.json();
+      const result = await api.get(`/cart?userId=${USER_ID}`).then(r => r.data);
 
-      if (!response.ok || !result.success) {
-        throw new Error(result.message || 'Could not fetch cart');
-      }
-
-      setCartItems(result.data.items || []);
+      setCartItems(result.data?.items || []);
     } catch (err) {
       setError(err.message || 'Failed to load checkout cart');
     } finally {
@@ -45,6 +41,10 @@ const Checkout = () => {
 
   useEffect(() => {
     fetchCart();
+  }, []);
+
+  useEffect(() => {
+    sessionStorage.removeItem("redirectAfterLogin");
   }, []);
 
   const subtotal = cartItems.reduce((acc, item) => {
@@ -105,26 +105,14 @@ const Checkout = () => {
       setPlacingOrder(true);
       setError('');
 
-      const response = await fetch('http://localhost:5000/api/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: USER_ID,
-          fullName: formData.fullName,
-          email: formData.email,
-          phoneNumber: formData.phoneNumber,
-          deliveryAddress: formData.deliveryAddress,
-          paymentMethod: formData.paymentMethod,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.message || 'Failed to place order');
-      }
+      const result = await api.post('/orders', {
+        userId: USER_ID,
+        fullName: formData.fullName,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        deliveryAddress: formData.deliveryAddress,
+        paymentMethod: formData.paymentMethod,
+      }).then(r => r.data);
 
       window.dispatchEvent(new Event('cartUpdate'));
       setCartItems([]);

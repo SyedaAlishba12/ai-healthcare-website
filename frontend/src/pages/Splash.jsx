@@ -11,7 +11,7 @@ const Splash = () => {
       if (token) {
         navigate("/home");
       } else {
-        navigate("/login");
+        navigate("/home");  // ← Changed from "/" to "/home"
       }
     }, 2500);
 

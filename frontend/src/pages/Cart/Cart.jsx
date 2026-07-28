@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/UI/Button';
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ;
 const USER_ID = 'guest_user_123';
 
 const Cart = () => {
@@ -17,7 +17,7 @@ const Cart = () => {
       setLoading(true);
       setError('');
 
-      const response = await fetch(`http://localhost:5000/api/cart?userId=${USER_ID}`);
+const response = await fetch(`${API_BASE_URL}/cart?userId=${USER_ID}`);
       const result = await response.json();
 
       if (!response.ok || !result.success) {
@@ -43,7 +43,7 @@ const Cart = () => {
     try {
       setActionLoading(true);
 
-      const response = await fetch(`http://localhost:5000/api/cart/update/${medicineId}`, {
+      const response = await fetch(`${API_BASE_URL}/cart/update/${medicineId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ const Cart = () => {
       setActionLoading(true);
 
       const response = await fetch(
-        `http://localhost:5000/api/cart/remove/${medicineId}?userId=${USER_ID}`,
+`${API_BASE_URL}/cart/remove/${medicineId}?userId=${USER_ID}`,
         {
           method: 'DELETE',
         }
@@ -101,7 +101,7 @@ const Cart = () => {
     try {
       setActionLoading(true);
 
-      const response = await fetch(`http://localhost:5000/api/cart/clear?userId=${USER_ID}`, {
+const response = await fetch(`${API_BASE_URL}/cart/clear?userId=${USER_ID}`, {
         method: 'DELETE',
       });
 

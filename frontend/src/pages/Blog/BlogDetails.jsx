@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Button from '../../components/UI/Button';
 import Card from '../../components/UI/Card';
-
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ;
 const BlogDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ const BlogDetails = () => {
     const fetchBlog = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5000/api/blogs/${id}`);
+        const response = await fetch(`${API_BASE_URL}/blogs/${id}`);
         const result = await response.json();
 
         if (!response.ok || !result.success) {
@@ -102,12 +102,28 @@ const BlogDetails = () => {
           {blog.description}
         </p>
 
-        {/* Full Content */}
-        <div className="text-slate-700 leading-relaxed space-y-6 text-base">
-          {blog.content.split('\n').map((paragraph, index) => (
-            paragraph.trim() && <p key={index}>{paragraph}</p>
-          ))}
-        </div>
+       {/* Full Content */}
+<Card className="max-w-none">
+  <div className="text-slate-600 text-base leading-relaxed">
+    {blog.content.split('\n\n').map((paragraph, index) => {
+      // Render **bold** text within each paragraph
+      const parts = paragraph.split(/(\*\*[^*]+\*\*)/g);
+      const renderedParagraph = parts.map((part, i) =>
+        part.startsWith('**') && part.endsWith('**') ? (
+          <strong key={i} className="text-dark font-bold">{part.slice(2, -2)}</strong>
+        ) : (
+          <span key={i}>{part}</span>
+        )
+      );
+
+      return (
+        <p key={index} className="mb-4 last:mb-0">
+          {renderedParagraph}
+        </p>
+      );
+    })}
+  </div>
+</Card>
 
         {/* Medical Disclaimer */}
         <div className="mt-12 rounded-2xl bg-blue-50 border border-blue-100 p-6">

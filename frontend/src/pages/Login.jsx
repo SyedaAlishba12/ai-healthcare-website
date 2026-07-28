@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import Button from "../components/UI/Button";
 import Input from "../components/UI/Input";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -26,7 +27,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setError("");
     setLoading(true);
 
@@ -34,12 +34,19 @@ const Login = () => {
       const response = await login(formData);
 
       if (response.success) {
-        navigate("/home");
+        const savedPath = sessionStorage.getItem("redirectAfterLogin");
+        console.log("Login - savedPath:", savedPath);
+        
+        const from = savedPath || location.state?.from || "/home";
+        console.log("Login - redirecting to:", from);
+        
+        sessionStorage.removeItem("redirectAfterLogin");
+        
+        // Use window.location for a clean redirect
+        window.location.href = from;
       }
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Login failed."
-      );
+      setError(err.response?.data?.message || "Login failed.");
     } finally {
       setLoading(false);
     }
@@ -48,6 +55,16 @@ const Login = () => {
   return (
     <div className="min-h-[80vh] flex justify-center items-center bg-lightBg px-4">
       <div className="bg-white shadow-lg rounded-3xl w-full max-w-md p-8">
+
+        {/* Back to Home button */}
+        <div className="mb-4">
+          <Link
+            to="/home"
+            className="inline-flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-primary transition-colors"
+          >
+            ← Back to Home
+          </Link>
+        </div>
 
         <h1 className="text-3xl font-bold text-center text-dark">
           Welcome Back
