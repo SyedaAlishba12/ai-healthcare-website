@@ -17,6 +17,9 @@ const HospitalMap = lazy(() =>
   import('../../components/Map/HospitalMap')
 );
 
+// Backend base URL — matches the deployed Render server.
+const API_BASE_URL = 'https://ai-healthcare-website.onrender.com/api';
+
 // ── Constants ─────────────────────────────────────────────────────────────────
 const DEFAULT_RADIUS = 5000; // metres
 
@@ -63,7 +66,7 @@ async function geocodeCity(query) {
 /** Fetch hospitals from our backend */
 async function fetchHospitals(lat, lng, radius = DEFAULT_RADIUS) {
   const res = await fetch(
-    `/api/hospitals/nearby?lat=${lat}&lng=${lng}&radius=${radius}`
+    `${API_BASE_URL}/hospitals/nearby?lat=${lat}&lng=${lng}&radius=${radius}`
   );
   const json = await res.json();
   if (!json.success) throw new Error(json.message || 'Failed to fetch hospitals');
